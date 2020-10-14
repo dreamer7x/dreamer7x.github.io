@@ -1,0 +1,30 @@
+{% extends 'head.html' %}
+
+{% block title %}已发布{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/publish.css') }}">
+{% endblock %}
+
+{% block search %}{% endblock %}
+
+{% block main %}
+    <hr>
+    {% for i in lis %}
+        <ul>
+            <li>
+                <div class="title-group">
+                    <p class="question-title"><a href="{{ url_for('answer',question = i) }}">{{ i }}</a></p>
+                    <p class="question-content">{{ questions[i][0] }}</p>
+                </div>
+                <div class="title-info">
+                    <span class="question-time">{{ questions[i][2] }}</span>
+                    <br>
+                    <a href="{{ url_for('delete_que',question = i) }}" class="question-author">删除</a>
+                    <a href="{{ url_for('invite',question = i) }}">邀请回答</a>
+                </div>
+            </li>
+        </ul>
+        <hr>
+    {% endfor %}
+{% endblock %}

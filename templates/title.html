@@ -1,0 +1,35 @@
+{% extends 'head.html' %}
+
+{% block title %}首页{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/title.css') }}">
+{% endblock %}
+
+{% block search %}
+    <form class="navbar-form navbar-left" method="post">
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="关键字" name="key">
+        </div>
+        <button class="btn btn-default">搜索</button>
+    </form>
+{% endblock %}
+
+{% block main %}
+    <hr>
+    {% for i in questions.keys() %}
+        <ul>
+            <li>
+                <div class="title-group">
+                    <p class="question-title"><a href="{{ url_for('answer',question = i) }}">{{ i }}</a></p>
+                    <p class="question-content">{{ questions[i][0] }}</p>
+                </div>
+                <div class="title-info">
+                    <a href="{{ url_for('user',username = questions[i][1]) }}" class="question-author">{{ questions[i][1] }}</a>
+                    <span class="question-time">{{ questions[i][2] }}</span>
+                </div>
+            </li>
+        </ul>
+        <hr>
+    {% endfor %}
+{% endblock %}

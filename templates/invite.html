@@ -1,0 +1,40 @@
+{% extends 'head.html' %}
+
+{% block title %}邀请{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/invite.css') }}">
+{% endblock %}
+
+{% block search %}{% endblock %}
+
+{% block main %}
+    <h3 class="page-title">邀请列表</h3>
+    <div class="table-responsive">
+        <form method="post">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th width="200px">用户名</th>
+                        <th>简介</th>
+                        <th width="100px">邀请选项</th>
+                    </tr>
+                </thead>
+                {% for i in users[session['phone']][4][2] %}
+                    <tbody>
+                        <tr>
+                            <td>{{ users[i][0] }}</td>
+                            <td>{{ users[i][2] }}</td>
+                            <td><input type="checkbox" name="{{ users[i][0] }}" value="True" checked="checked"></td>
+                        </tr>
+                    </tbody>
+                {% endfor %}
+            </table>
+            <div class="form-container1">
+                <div align="right" class="form-group">
+                    <button class="btn btn-primary">发出邀请</button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

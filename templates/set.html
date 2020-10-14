@@ -1,0 +1,35 @@
+{% extends 'head.html' %}
+
+{% block title %}设置{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/set.css') }}">
+{% endblock %}
+
+{% block search %}{% endblock %}
+
+{% block main %}
+        <form method = 'post'>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>功能</th>
+                    <th width="100px">选项</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>匿名模式</td>
+                    <td width="300px">
+                        <input type="checkbox" value="True" name="hide">是</input>
+                        <br>
+                        <input type="checkbox" value="False" name="hide">否</input>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="form-container">
+            <button type="submit" class="btn btn-primary">应用</button>
+        </div>
+        </form>
+{% endblock %}

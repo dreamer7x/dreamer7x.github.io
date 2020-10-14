@@ -1,0 +1,55 @@
+{% extends 'head.html' %}
+
+{% block title %}用户{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/user.css') }}">
+{% endblock %}
+
+{% block search %}{% endblock %}
+
+{% block main %}
+    <div class="table-responsive">
+        {% if session['phone'] == phone %}
+            <table class="table">
+                <tr>
+                    <td>用户名</td>
+                    <td>{{ users[phone][0] }}</td>
+                </tr>
+                <tr>
+                    <td>手机号</td>
+                    <td>{{ phone }}</td>
+                </tr>
+                <tr>
+                    <td>简介</td>
+                    <td>{{ users[phone][2] }}</td>
+                </tr>
+            </table>
+            <a href="{{ url_for('change') }}">修改密码</a>
+            <br>
+            <a href="{{ url_for('set') }}">设置</a>
+        {% else %}
+            <table class="table">
+                <tr>
+                    <td>用户名</td>
+                    <td>{{ users[phone][0] }}</td>
+                </tr>
+                <tr>
+                    <td>简介</td>
+                    <td>{{ users[phone][2] }}</td>
+                </tr>
+            </table>
+            {% if phone in users[session['phone']][4][2] %}
+                <p>已加为好友</p>
+            {% else %}
+                <form method="post">
+                    <div class="form-container">
+                        <div>
+                            <button class="btn btn-primary" value="{{ users[phone][0] }}" name="invitation">请求加为好友</button>
+                        </div>
+                    </div>
+                </form>
+            {% endif %}
+        {% endif %}
+    </div>
+{% endblock %}
