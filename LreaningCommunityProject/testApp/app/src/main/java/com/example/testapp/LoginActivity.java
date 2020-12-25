@@ -23,6 +23,19 @@ import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.zip.Inflater;
 
+/**
+ * 该版本的验证登录模块已经实现了最基础的验证登录功能，这里列举一些投入实际使用时要求改写的地方
+ *
+ * 一、mysql采用的静态id为自动加值的主键，该主键数据类型为shortint型，要求将其改为char(6)型从而实现对于静态id的格式化
+ *
+ * 二、前端界面还有一些要进行修改的地方：
+ * 1.首先需要绑定认责声明，调用系统api访问认责声明所包含的网址
+ * 2.前端的几个动态语句要进行改写
+ * 3.登陆成功之后该程序仅仅实现了简单的程
+ *
+ * 三、服务端程序待完善，服务端创建新账户仅仅只是创建了account账户，要求创建社交身份账户
+ */
+
 public class LoginActivity extends AppCompatActivity {
 
     //参数
