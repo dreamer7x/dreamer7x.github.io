@@ -43,17 +43,22 @@ def clock_in():
         sServeType = request.form.get('sServeType')
 
         if sServeType == '0':  # 提供权威时间
+            print("获取权威时间")
             sDate = datetime.datetime.now().strftime('%Y %m %d')
             sWeek = datetime.datetime.now().strftime('%w')
             if sWeek == '0':
                 sWeek = '7'
             sDate = sDate + ' ' + sWeek
+            print(sDate)
             return '0' + sDate
 
         if sServeType == '1':  # 提供打卡服务
             sStaticId = keeper.DataKeeper.mActivityIdStaticIdList[sActivityId]
             sDate = datetime.datetime.now().strftime('%d')
-            sDate = eval(sDate)
+            if sDate[0] == '0':
+                sDate = eval(sDate[1])
+            else:
+                sDate = eval(sDate)
             lIdentitySign = mysql_tools.get_identity_sign(str(sStaticId))
             sClockIn = lIdentitySign[3]
             if sClockIn[sDate - 1] != 1:
@@ -170,16 +175,18 @@ def chat():
                 lOldDrivingChatStaticId = eval(lIdentityChat[5])
                 if sToStaticId in lOldDrivingChatStaticId:
                     lChat = mysql_tools.get_chat(str(sFromStaticId),str(sToStaticId))
+                    sNewChat = lChat[2]
                     sOldChat = lChat[3]
-                    sRespond = sOldChat
+                    sRespond = sOldChat + sNewChat[1:]
                     print(sRespond)
                     return '0' + sRespond
 
                 lDrivingChatStaticId = eval(lIdentityChat[3])
                 if sToStaticId in lDrivingChatStaticId:
                     lChat = mysql_tools.get_chat(str(sFromStaticId),str(sToStaticId))
+                    sNewChat = lChat[2]
                     sOldChat = lChat[3]
-                    sRespond = sOldChat
+                    sRespond = sOldChat + sNewChat[1:]
                     print(sRespond)
                     return '0' + sRespond
 
@@ -241,12 +248,13 @@ def chat():
                     return '3' # 还未进行更新
 
                 lNewPassiveChatStaticId = eval(lToIdentityChat[2])
-                if sToStaticId in lNewPassiveChatStaticId:
-                    lChat = mysql_tools.get_chat(sFromStaticId,sToStaticId)
+                if sFromStaticId in lNewPassiveChatStaticId:
+                    print("继续更新")
+                    lChat = mysql_tools.get_chat(str(sFromStaticId), str(sToStaticId))
                     lNewChat = lChat[2]
-                    lNewChat = lNewChat + sSendChat + '<spa2>'
+                    lNewChat = lNewChat + sSendChat + '<spa1>'
                     # 更新聊天数据
-                    mysql_tools.update_new_chat(str(sFromStaticId),str(sToStaticId),lNewChat)
+                    mysql_tools.update_new_chat(str(sFromStaticId), str(sToStaticId), lNewChat)
                     return '0'
 
                 lOldPassiveChatStaticId = eval(lToIdentityChat[6])
@@ -279,7 +287,7 @@ def chat():
                                                                               str(lOldPassiveChatStaticId),
                                                                               str(sChatOrder))
                         print("成功执行更新命令 锁住聊天信息")
-                        sNewChat = '2' + sSendChat + '<spa2>'
+                        sNewChat = '1' + sSendChat + '<spa1>'
                         mysql_tools.update_new_chat(str(sFromStaticId), str(sToStaticId), sNewChat)
                         return '0'
                     iTimeout = iTimeout + 1
@@ -344,10 +352,10 @@ def chat():
                     return '3'  # 还未进行更新
 
                 lNewDrivingChatStaticId = eval(lToIdentityChat[1])
-                if sToStaticId in lNewDrivingChatStaticId:
-                    lChat = mysql_tools.get_chat(sFromStaticId, sToStaticId)
+                if sFromStaticId in lNewDrivingChatStaticId:
+                    lChat = mysql_tools.get_chat(str(sToStaticId), str(sFromStaticId))
                     lNewChat = lChat[2]
-                    lNewChat = lNewChat + sSendChat + '<spa1>'
+                    lNewChat = lNewChat + sSendChat + '<spa2>'
                     # 更新聊天数据
                     mysql_tools.update_new_chat(str(sToStaticId), str(sFromStaticId), lNewChat)
                     return '0'
@@ -489,8 +497,6 @@ def chat():
                     iTimeout = iTimeout + 1
             return '0' # 无更新数据
 
-
-
         if sServeType == '4': # 清除更新数据
             sFromStaticId = keeper.DataKeeper.mActivityIdStaticIdList[sActivityId]
             sToStaticId = eval(request.form.get("sStaticId"))
@@ -558,7 +564,10 @@ def identity_sign():
             sRespond = '' + sIdentitySign[1] \
                        + ' ' + sIdentitySign[2] \
                        + ' ' + sIdentitySign[3] \
-                       + ' ' + sIdentitySign[4]
+                       + ' ' + sIdentitySign[4] \
+                       + ' ' + sIdentitySign[5] \
+                       + ' ' + sIdentitySign[6] \
+                       + ' ' + str(sIdentitySign[0])
             print(sRespond)
             return '0' + sRespond
 
@@ -568,9 +577,18 @@ def identity_sign():
             print(sStaticId)
             if sStaticId[0] == '[':  # 获取多个用户信息
                 sStaticIds = eval(sStaticId)
+                if sStaticIds == []:
+                    return '0'
                 lIdentitySigns = mysql_tools.get_many_identity_signs(sStaticIds)
-                if lIdentitySigns == None:
+                if lIdentitySigns == ():
                     return '2' # 未找到相关记录
+                if str(lIdentitySigns)[1] != '(':
+                    sRespond = '' + str(lIdentitySigns[0]) \
+                           + ' ' + lIdentitySigns[1] \
+                           + ' ' + lIdentitySigns[2] \
+                           + ' ' + lIdentitySigns[4]
+                    print(sRespond)
+                    return '0' + sRespond
                 sRespond = '' + str(lIdentitySigns[0][0]) \
                            + ' ' + lIdentitySigns[0][1] \
                            + ' ' + lIdentitySigns[0][2] \
@@ -594,85 +612,6 @@ def identity_sign():
                 print(sRespond)
                 return '0' + sRespond
 
-@app.route('/identity_attentions_fans',methods = ['GET','POST'])
-def identity_attentions_fans():
-    if request.method == 'GET':
-        return '未开放'
-
-    if request.method == 'POST':
-        sActivityId = request.form.get('sActivityId')
-        if sActivityId not in keeper.DataKeeper.mActivityIdStaticIdList:
-            return '1'
-        sServeType = request.form.get('sServeType')
-
-        if sServeType == '0': # 获取 一般用户 一般信息 包括:关注数 粉丝数
-            print('获取基础信息')
-            sStaticId = request.form.get('sStaticId')
-            if sStaticId[0] == '[':
-                sStaticIds = eval(sStaticId)
-                lIdentitys = mysql_tools.get_many_identity_attentions_fans(sStaticIds)
-                sRespond = '' + lIdentitys[0][1] + ' ' + lIdentitys[0][2]
-                for lIdentity in lIdentitys:
-                    sRespond = sRespond + ' ' + lIdentity[1] + ' ' + lIdentity[2]
-                return '0' + sRespond
-            else:
-                lIdentity = mysql_tools.get_identity_attentions_fans(sStaticId)
-                return '0' + lIdentity[1] + ' ' + lIdentity[2]
-
-        if sServeType == '1': # 获取用户个人信息
-            print('获取用户个人信息')
-            sStaticId = keeper.DataKeeper.mActivityIdStaticIdList[sActivityId]
-            lIdentity = mysql_tools.get_identity_attentions_fans(str(sStaticId))
-            return '0' + lIdentity[1] + ' ' + lIdentity[2] + '<spa>' + lIdentity[3] + '<spa>' + lIdentity[4]
-
-@app.route('/identity_trends',methods = ['GET','POST'])
-def identity_trends():
-    if request.method == 'GET':
-        return '未开放'
-
-    if request.method == 'POST':
-        sActivityId = request.form.get('sActivityId')
-        if sActivityId not in keeper.DataKeeper.mActivityIdStaticIdList:
-            return '1'
-        sServeType = request.form.get('sServeType')
-
-        if sServeType == '0': # 查看个人动态 数据制式 新数据1 新数据2……<spa>旧数据1 旧数据2……
-            sStatciId = keeper.DataKeeper.mActivityIdStaticIdList[sActivityId]
-            lIdentityTrends = mysql_tools.get_identity_trends(str(sStatciId))
-
-            sNewTrendsId = lIdentityTrends[2]
-            if sNewTrendsId == None:
-                sOldTrendsId = lIdentityTrends[3]
-                if sOldTrendsId == None:
-                    return '0' # 无更新动态
-                lOldTrendsId = sOldTrendsId.split(' ');
-                sRespond = "" + lOldTrendsId[0]
-                for sOldTrendsId in lOldTrendsId[1:]:
-                    sRespond = sRespond + ' ' + sOldTrendsId
-                return '0' + '<spa>' + sRespond
-
-            lNewTrendsId = sNewTrendsId.split(' ')
-            sRespond = '' + lNewTrendsId[0]
-            for sTrendsId in lNewTrendsId[1:]:
-                sRespond = sRespond + ' ' + sTrendsId
-            sOldTrendsId = lIdentityTrends[3]
-            if sOldTrendsId == None:
-                mysql_tools.update_identity_trends_New_Old(sStatciId, '', sNewTrendsId + ' ' \
-                                                           + sOldTrendsId)
-                return '0' + sRespond + '<spa>'
-            lOldTrendsId = sOldTrendsId.split(' ')
-            sRespond = sRespond + '<spa>'
-            for sOldTrendsId in lOldTrendsId:
-                sRespond = sRespond + ' ' + sOldTrendsId
-            mysql_tools.update_identity_trends_New_Old(sStatciId, '', sNewTrendsId + ' ' \
-                                                       + sOldTrendsId)
-            return '0' + sRespond
-
-        if sServeType == '1': # 个人动态信息
-            sStaticId = request.form.get('sStaticId')
-            lIdentityTrends = mysql_tools.get_identity_trends(sStaticId)
-            return '0' + lIdentityTrends[1]
-
 @app.route('/identity_friends',methods = ['GET','POST']) # 获取朋友圈索引
 def identity_friends():
     if request.method == 'GET':
@@ -685,37 +624,281 @@ def identity_friends():
             return '1'
 
         if sServeType == '0': # 好友列表
-            sStaticId = keeper.DataKeeper.mActivityIdStaticIdList(sActivityId)
-            lIdentity = mysql_tools.get_identity_friends(str(sStaticId))
-            return '0' + lIdentity[1] + '<spa>' + lIdentity[2]
+            print("获取好友列表")
+            sStaticId = keeper.DataKeeper.mActivityIdStaticIdList[sActivityId]
+            lIdentityFriends = mysql_tools.get_identity_friends(str(sStaticId))
+            lFriendsStaticId = eval(lIdentityFriends[1])
+            lOldNewFriendsStaticId = eval(lIdentityFriends[2])
+            lNewFriendsStaticId = eval(lIdentityFriends[3])
+            sRespond = ''
+            if lNewFriendsStaticId != []:
+                for sNewFriendsStaticId in lNewFriendsStaticId:
+                    sRespond = sRespond + str(sNewFriendsStaticId) + ' '
+            if lOldNewFriendsStaticId != []:
+                for sOldNewFriendsStaticId in lOldNewFriendsStaticId:
+                    sRespond  = sRespond + str(sOldNewFriendsStaticId) + ' '
+                sRespond = sRespond[0:-1]
+            lOldNewFriendsStaticId = lNewFriendsStaticId + lOldNewFriendsStaticId
+            lNewFriendsStaticId = []
+            sRespond = sRespond + '<spa>'
+            if lFriendsStaticId != []:
+                for sFriendsStaticId in lFriendsStaticId:
+                    sRespond = sRespond + str(sFriendsStaticId) + ' '
+                sRespond = sRespond[0:-1]
+            mysql_tools.update_identity_friends_old_new_new(str(sStaticId),
+                                                            str(lOldNewFriendsStaticId),
+                                                            str(lNewFriendsStaticId))
+            print(sRespond)
+            return '0' + sRespond
 
-@app.route('/send_chat',methods = ['GET','POST']) # 发送聊天信息
-def send_chat():
+        if sServeType == '1': # 获取申请好友介绍
+            sStaticId = keeper.DataKeeper.mActivityIdStaticIdList[sActivityId]
+            lIdentityFriends = mysql_tools.get_identity_friends(str(sStaticId))
+            mIntroduce = eval(lIdentityFriends[5])
+            if mIntroduce != {}:
+                sRespond = ''
+                for ikey in mIntroduce:
+                    sRespond = sRespond + str(ikey) + ' ' + mIntroduce[ikey] + ' '
+                sRespond = sRespond[0:-1]
+                print(sRespond)
+                return '0' + sRespond
+            return '0'
+
+        if sServeType == '2':# 获取好友更新信息
+            sStaticId = keeper.DataKeeper.mActivityIdStaticIdList(sActivityId)
+            lIdentityFriends = mysql_tools.get_identity_friends(str(sStaticId))
+            lNewFriendsStaticId = eval(lIdentityFriends[3])
+            lOldNewFriendsStaticId = eval(lIdentityFriends[2])
+            sRespond = ''
+            if lNewFriendsStaticId != []:
+                for sNewFriendsStaticId in lNewFriendsStaticId:
+                    sRespond = sRespond + sNewFriendsStaticId + ' '
+                sRespond = sRespond[0:-1]
+            lOldNewFriendsStaticId = lNewFriendsStaticId + lOldNewFriendsStaticId
+            lNewFriendsStaticId = []
+            mysql_tools.update_identity_friends_old_new_new(str(sStaticId),
+                                                            str(lOldNewFriendsStaticId),
+                                                            str(lNewFriendsStaticId))
+            print(sRespond)
+            return '0' + sRespond
+
+        if sServeType == '3': # 申请添加好友
+            print("申请添加好友")
+            sFromStaticId = keeper.DataKeeper.mActivityIdStaticIdList(sActivityId)
+            sToStaticId = eval(request.form.get('sStaticId'))
+            sIntroduce = request.form.get('sIntroduce')
+            lIdentityFriends = mysql_tools.get_identity_friends(str(sToStaticId))
+            lNewFriendsStaticId = eval(lIdentityFriends[3])
+            lBlackList = eval(lIdentityFriends[4])
+            mIntroduce = eval(lIdentityFriends[5])
+            if sFromStaticId in lNewFriendsStaticId:
+                return '0'
+            if sFromStaticId in lBlackList:
+                return '2' # 好友申请失败 申请用户位于黑名单中
+            lNewFriendsStaticId = [sFromStaticId] + lNewFriendsStaticId
+            mIntroduce[sFromStaticId] = sIntroduce
+            mysql_tools.update_identity_friends_new(str(sToStaticId),
+                                                    str(lNewFriendsStaticId),
+                                                    str(mIntroduce))
+            return '0'
+
+        if sServeType == '4': # 同意添加好友
+            sFromStaticId = keeper.DataKeeper.mActivityIdStaticIdList[sActivityId]
+            sToStaticId = eval(request.form.get("sStaticId"))
+            lIdentityFriends = mysql_tools.get_identity_friends(str(sFromStaticId))
+            lOldNewFriendsStaticId = eval(lIdentityFriends[2])
+            iLength = len(lOldNewFriendsStaticId)
+            iTimeout = 0
+            while iTimeout < iLength:
+                if lOldNewFriendsStaticId[iTimeout] == sToStaticId:
+                    lFriendsStaticId = eval(lIdentityFriends[1])
+                    lFriendsStaticId = [lOldNewFriendsStaticId[iTimeout]] + lFriendsStaticId
+                    mIntroduce = eval(lIdentityFriends[5])
+                    del mIntroduce[sToStaticId]
+                    lOldNewFriendsStaticId = lOldNewFriendsStaticId[0:iTimeout] \
+                                             + lOldNewFriendsStaticId[iTimeout + 1:]
+                    mysql_tools.update_identity_friends_old_new(str(sFromStaticId),
+                                                                str(lFriendsStaticId),
+                                                                str(lOldNewFriendsStaticId),
+                                                                str(mIntroduce))
+                    return '0'
+            return '2' # 同意申请好友不存在在好友申请列表中
+
+        if sServeType == '5': # 删除添加好友
+            sFromStaticId = keeper.DataKeeper.mActivityIdStaticIdList[sActivityId]
+            sToStaticId = eval(request.form.get("sStaticId"))
+            lIdentityFriends = mysql_tools.get_identity_friends(str(sFromStaticId))
+            lOldNewFriendsStaticId = eval(lIdentityFriends[2])
+            iLength = len(lOldNewFriendsStaticId)
+            iTimeout = 0
+            while iTimeout < iLength:
+                if lOldNewFriendsStaticId[iTimeout] == sToStaticId:
+                    mIntroduce = eval(lIdentityFriends[5])
+                    del mIntroduce[sToStaticId]
+                    lOldNewFriendsStaticId = lOldNewFriendsStaticId[0:iTimeout] \
+                                             + lOldNewFriendsStaticId[iTimeout + 1:]
+                    mysql_tools.update_identity_friends_old_new_new(str(sFromStaticId),
+                                                                str(lOldNewFriendsStaticId),
+                                                                str(mIntroduce))
+                    return '0'
+            return '0'
+
+        if sServeType == '6': # 删除好友
+            sFromStaticId = keeper.DataKeeper.mActivityIdStaticIdList[sActivityId]
+            sToStaticId = eval(request.form.get("sStaticId"))
+            lIdentityFriends = mysql_tools.get_identity_friends(str(sFromStaticId))
+            lFriendsStaticId = eval(lIdentityFriends[1])
+            iLength = len(lFriendsStaticId)
+            iTimeout = 0
+            while iTimeout < iLength:
+                if lFriendsStaticId[iTimeout] == sToStaticId:
+                    lFriendsStaticId = eval(lIdentityFriends[1])
+                    lFriendsStaticId = lFriendsStaticId[0:iTimeout] \
+                                       + lFriendsStaticId[iTimeout + 1:]
+                    mysql_tools.update_identity_friends_friends(str(sFromStaticId),
+                                                                str(lFriendsStaticId))
+                    lIdentityFriends = mysql_tools.get_identity_friends(str(sToStaticId))
+                    lFriendsStaticId = eval(lFriendsStaticId[1])
+                    iLength = len(lFriendsStaticId)
+                    iTimeout = 0
+                    while iTimeout < iLength:
+                        if lFriendsStaticId[iTimeout] == sFromStaticId:
+                            lIdentityFriends = eval(lIdentityFriends[1])
+                            lFriendsStaticId = lFriendsStaticId[0:iTimeout] \
+                                               + lFriendsStaticId[iTimeout + 1:]
+                            mysql_tools.update_identity_friends_friends(str(sFromStaticId),
+                                                                        str(lFriendsStaticId))
+                    return '0'
+            return '2' # 删除好友失败 因为申请列表中并不存在该好友
+
+@app.route('/identity_trends',methods = ['GET','POST'])
+def identity_trends():
     if request.method == 'GET':
-        return '暂未开放'
+        return '未开放'
 
     if request.method == 'POST':
-        sServeType = request.form.get('sServeType')
         sActivityId = request.form.get('sActivityId')
         if sActivityId not in keeper.DataKeeper.mActivityIdStaticIdList:
             return '1'
+        sServeType = request.form.get('sServeType')
 
-        sStaticId = keeper.DataKeeper.mActivityIdStaticIdList[sActivityId]
-        lIdentityChat = mysql_tools.get_identity_chat(sStaticId)
+        if sServeType == '0': # 查看个人动态
+            print("查看个人动态")
+            sStatciId = keeper.DataKeeper.mActivityIdStaticIdList[sActivityId]
+            lIdentityTrends = mysql_tools.get_identity_trends(str(sStatciId))
 
-        if sServeType == '0':
-            sStaticId1 = lIdentityChat[1]
-            sStaticId2 = lIdentityChat[2]
-            sStaticId = request.form.get('sStaticId')
-            sPattern = '(^' + sStaticId + '\\s)|(\\s' + sStaticId + '\\s)|(\\s' + sStaticId + '$)'
-            tAnswer = re.search(sPattern, sStaticId1).span()
-            if tAnswer != None:
-                lIdentity = mysql_tools.get_chat(sStaticId, sStaticId1)
+            lTrendsId = eval(lIdentityTrends[1])
+            sRespond1 = ""
+            for sTrendsId in lTrendsId:
+                sRespond1 = sRespond1 + str(sTrendsId) + ' '
+            if sRespond1 != "":
+                sRespond1 = sRespond1[0:-1]
+
+            lCollectTrendsId = eval(lIdentityTrends[2])
+            sRespond2 = ""
+            for sTrendsId in lCollectTrendsId:
+                sRespond2 = sRespond2 + str(sTrendsId) + ' '
+            if sRespond2 != "":
+                sRespond2 = sRespond2[0:-1]
+            sRespond = "" + sRespond1 + '<spa>' + sRespond2
+            print(sRespond)
+            return '0' + sRespond
+
+        if sServeType == '1': # 查看历史动态
+            print("查看更新动态")
+            sStaticId = keeper.DataKeeper.mActivityIdStaticIdList[sActivityId]
+            lIdentityTrends = mysql_tools.get_identity_trends(str(sStaticId))
+            lOldTrendsId = eval(lIdentityTrends[4])
+            lNewTrendsId = eval(lIdentityTrends[3])
+            lOldTrendsId = lNewTrendsId + lOldTrendsId
+            sRespond = ""
+            for sOldTrendsId in lOldTrendsId:
+                sRespond = sRespond + str(sOldTrendsId) + ' '
+            if sRespond != "":
+                sRespond = sRespond[0:-1]
+            if lNewTrendsId != []:
+                mysql_tools.update_identity_trends_Old(str(sStaticId),
+                                                       str(lOldTrendsId))
+            print(sRespond)
+            return '0' + sRespond
+
+        if sServeType == '2': # 获取更新动态信息
+            sStaticId = keeper.DataKeeper.mActivityIdStaticIdList[sActivityId]
+            lIdentityTrends = mysql_tools.get_identity_trends(str(sStaticId))
+            lNewTrendsId = eval(lIdentityTrends[3])
+            if lNewTrendsId == []:
                 return '0'
-            tAnswer = re.search(sPattern, sStaticId2).span()
-            if tAnswer != None:
-                lIdentity = mysql_tools.get_chat(sStaticId2, sStaticId)
-                return '0'
+            sRespond = ""
+            for sTrendsId in lNewTrendsId:
+                sRespond = sRespond + sTrendsId + ' '
+            sRespond = sRespond[0:-1]
+            lOldTrendsId = eval(lIdentityTrends[4])
+            lOldTrendsId = lNewTrendsId + lOldTrendsId
+            mysql_tools.update_identity_trends_Old(str(sStaticId),
+                                                   str(lOldTrendsId))
+            print(sRespond)
+            return '0' + sRespond
+
+        if sServeType == '3': # 获取其他用户动态信息
+            print("获取其他用户动态信息")
+            sStaticId = request.form.get("sStaticId")
+            if sStaticId[0] == '[':
+                sStaticIds = eval(sStaticId)
+                lIdentityTrends = mysql_tools.get_many_identity_trends(sStaticIds)
+                if lIdentityTrends == None:
+                    return '0'
+                if str(lIdentityTrends)[1] == '(':
+                    sRespond = ''
+                    for lIdentityTrend in lIdentityTrends:
+                        sRespond = sRespond + lIdentityTrend[0] + '<spa>'
+                        lTrendsId = eval(lIdentityTrend[1])
+                        for sTrendsId in lTrendsId:
+                            sRespond = sRespond + sTrendsId + ' '
+                        if sRespond[-1] == ' ':
+                            sRespond = sRespond[0:-1]
+                        sRespond = sRespond + '<spa>'
+                        lCollectTrendsId = eval(lIdentityTrends[2])
+                        for sCollectTrendsId in lCollectTrendsId:
+                            sRespond = sRespond + sCollectTrendsId + ' '
+                        if sRespond[-1] == ' ':
+                            sRespond = sRespond[0:-1]
+                        sRespond = sRespond + '<spa1>'
+                    print(sRespond)
+                    return '0' + sRespond
+                else:
+                    sRespond = ''
+                    sRespond = sRespond + lIdentityTrends[0] + '<spa>'
+                    lTrendsId = eval(lIdentityTrends[1])
+                    for sTrendsId in lTrendsId:
+                        sRespond = sRespond + sTrendsId + ' '
+                    if sRespond[-1] == ' ':
+                        sRespond = sRespond[0:-1]
+                    sRespond = sRespond + "<spa>"
+                    lCollectTrendsId = eval(lIdentityTrends[2])
+                    for sCollectTrend in lCollectTrendsId:
+                        sRespond = sRespond + sCollectTrend + ' '
+                    if sRespond[-1] == ' ':
+                        sRespond = sRespond[0:-1]
+                    print(sRespond)
+                    return '0' + sRespond
+            else:
+                lIdentityTrend = mysql_tools.get_identity_trends(sStaticId)
+                if lIdentityTrend == None:
+                    return '0'
+                lTrendsId = eval(lIdentityTrend[1])
+                lCollectTrendsId = eval(lIdentityTrend[2])
+                sRespond = ""
+                for sTrendsId in lTrendsId:
+                    sRespond = sRespond + str(sTrendsId) + ' '
+                if sRespond[-1] == ' ':
+                    sRespond = sRespond[0:-1]
+                sRespond = sRespond + '<spa>'
+                for sCollectTrendsId in lCollectTrendsId:
+                    sRespond = sRespond + str(sCollectTrendsId) + ' '
+                if sRespond[-1] == ' ':
+                    sRespond = sRespond[0:-1]
+                print(sRespond)
+                return '0' + sRespond
 
 @app.route('/trends',methods = ['GET','POST'])
 def trends():
@@ -728,40 +911,404 @@ def trends():
         if sActivityId not in keeper.DataKeeper.mActivityIdStaticIdList:
             return '1'
 
-        if sServeType == '0': # 获取动态更新信息
+        if sServeType == '0': # 获取动态信息
+            print("获取动态信息")
             sStaticId = keeper.DataKeeper.mActivityIdStaticIdList[sActivityId]
-            lIdentityTrends = mysql_tools.get_identity_trends(sStaticId)
-            lNewTrendsIds = lIdentityTrends[2].split(' ')
-            lResponds = mysql_tools.get_many_trends(lNewTrendsIds)
-            sRespond = '<sTitle>' + lResponds[0][2] + '<sText>' \
-                       + lResponds[0][3] + '<sPicture>' \
-                       + lResponds[0][4] + '<sPraise>' \
-                       + lResponds[0][5] + '<sDiscuss>' \
-                       + lResponds[0][6]
-            for lRespond in lResponds:
-                sRespond = sRespond + '<end><sTitle>' + lRespond[2] + '<sText>' \
-                       + lRespond[3] + '<sPicture>' \
-                       + lRespond[4] + '<sPraise>' \
-                       + lRespond[5] + '<sDiscuss>' \
-                       + lRespond[6]
+            sTrendsId = request.form.get("sTrendsId")
+            if sTrendsId[0] == '[':
+                lTrendsId = eval(sTrendsId)
+                if lTrendsId == []:
+                    return '0'
+                lManyTrends = mysql_tools.get_many_trends(lTrendsId)
+                if lManyTrends == None:
+                    return '0'
+                sRespond = ""
+                for lTrends in lManyTrends:
+                    sRespond = sRespond + str(lTrends[0]) + '<spa1>' \
+                               + str(lTrends[1]) + '<spa>' \
+                               + lTrends[2] + '<spa>' \
+                               + lTrends[3] + '<spa>' \
+                               + lTrends[4] + '<spa>' \
+                               + str(lTrends[5]) + '<spa>' \
+                               + str(lTrends[6]) + '<spa>'
+                    if sStaticId in eval(lTrends[7]):
+                        sRespond = sRespond + 'true<spa1>'
+                    else:
+                        sRespond = sRespond + 'false<spa1>'
+                print(sRespond)
+                return '0' + sRespond
+            else:
+                lTrends = mysql_tools.get_trends(sTrendsId)
+                if lTrends == None:
+                    return '0'
+                sRespond = ""
+                sRespond = sRespond + str(lTrends[0]) + '<spa1>' \
+                           + str(lTrends[1]) + '<spa>' \
+                           + lTrends[2] + '<spa>' \
+                           + lTrends[3] + '<spa>' \
+                           + lTrends[4] + '<spa>' \
+                           + str(lTrends[5]) + '<spa>' \
+                           + str(lTrends[6]) + '<spa>'
+                if sStaticId in eval(lTrends[7]):
+                    sRespond = sRespond + 'true<spa1>'
+                else:
+                    sRespond = sRespond + 'false<spa1>'
+                print(sRespond)
+                return '0' + sRespond
+
+        if sServeType == '1': # 获取评论
+            sTrendsId = request.form.get('sTrendsId')
+            sStaticId = keeper.DataKeeper.mActivityIdStaticIdList[sActivityId]
+            lTrend = mysql_tools.get_trends(sTrendsId)
+            mDiscuss = eval(lTrend[5])
+            sRespond1 = ""
+            sRespond2 = ""
+            for sStaticId1 in mDiscuss:
+                sRespond1 = sRespond1 + str(sStaticId1) + '<spa1>' \
+                           + mDiscuss[sStaticId1][0] + '<spa1>'
+                sRespond1 = sRespond1 + str(mDiscuss[sStaticId1][1]) + '<spa>' \
+                            + str(mDiscuss[sStaticId1][2]) + '<spa>'
+                lPraiseList = eval(mDiscuss[sStaticId1][3])
+                if sStaticId in lPraiseList:
+                    sRespond1 = sRespond1 + 'true<spa>'
+                else:
+                    sRespond1 = sRespond1 + 'false<spa>'
+                mReplyList = eval(mDiscuss[sStaticId1][4])
+                if sStaticId in mReplyList:
+                    sRespond1 = sRespond1 + 'true<spa1>'
+                else:
+                    sRespond1 = sRespond1 + 'false<spa>'
+
+                mReply = eval(mDiscuss[sStaticId1][4])
+                for sStaticId2 in mReply:
+                    sRespond2 = str(sStaticId2) + '<spa>' \
+                                + mReply[sStaticId2][0] + '<spa>' \
+                                + str(mReply[sStaticId2][1]) + '<spa>'
+                    lReplyPraiseList = eval(mReply[sStaticId2][2])
+                    if sStaticId in lReplyPraiseList:
+                        sRespond2 = sRespond2 + 'true<spa>'
+                    else:
+                        sRespond2 = sRespond2 + 'false<spa>'
+                if sRespond2 != "":
+                    sRespond2 = sRespond2[0:-5]
+                else:
+                    sRespond2 = 'null'
+
+                sRespond1 = sRespond1 + sRespond2 + '<spa1>'
+            if sRespond1 != "":
+                sRespond = sRespond1[0:-6]
+            print(sRespond)
             return '0' + sRespond
 
-        if sServeType == '1': # 获取是否点赞
+        if sServeType == '2': # 发送点赞信息
             sStaticId = keeper.DataKeeper.mActivityIdStaticIdList[sActivityId]
             sTrendsId = request.form.get('sTrendsId')
             lIdentityTrend = mysql_tools.get_trends(sTrendsId)
-            sPraiseStaticIds = lIdentityTrend[7]
-            sPattern = '(^' + sStaticId + '\\s)|(\\s' + sStaticId + '\\s)|(\\s' + sStaticId + '$)'
-            tAnswer = re.search(sPattern, sPraiseStaticIds).span()
-            if tAnswer != None:
-                return '0' + 'y'
-            else:
-                return '0' + 'n'
+            if lIdentityTrend == None:
+                return '2' # 未找到相关动态 点赞失败
+            lPraiseStaticId = eval(lIdentityTrend[7])
+            if sStaticId in lPraiseStaticId:
+                return '3' # 重复点赞 点赞失败
+            iPraiseNumber = lIdentityTrend[5] + 1
+            lPraiseStaticId = [sStaticId] + lPraiseStaticId
+            mysql_tools.update_trends_praise(sTrendsId,str(iPraiseNumber),str(lPraiseStaticId))
+            return '0' # 点赞成功
 
-        if sServeType == '2': #获取评论
+        if sServeType == '3': # 取消点赞
+            sStaticId = keeper.DataKeeper.mActivityIdStaticIdList[sActivityId]
             sTrendsId = request.form.get('sTrendsId')
-            lIdentityTrend = mysql_tools.get_identity_trends(sTrendsId)
-            return '0' + lIdentityTrend[8]
+            lTrend = mysql_tools.get_trends(sTrendsId)
+            if lTrend == None:
+                return '2' # 未找到相关动态 取消点赞失败
+            lPraiseStaticId = eval(lTrend[7])
+            iLength = len(lPraiseStaticId)
+            iTimeout = 0
+            while iTimeout < iLength:
+                if lPraiseStaticId[iTimeout] == sStaticId:
+                    print("找到相关点赞用户 尝试执行删除操作")
+                    iPraiseNumber = lTrend[5]
+                    iPraiseNumber = iPraiseNumber - 1
+                    if len(lPraiseStaticId) > iTimeout + 1:
+                        lPraiseStaticId = lPraiseStaticId[0:iTimeout] \
+                                          + lPraiseStaticId[iTimeout + 1:]
+                    else:
+                        lPraiseStaticId = lPraiseStaticId[0:iTimeout]
+                    mysql_tools.update_trends_praise(sTrendsId,
+                                                     str(iPraiseNumber),
+                                                     str(lPraiseStaticId))
+                    return '0' # 取消点赞成功
+                iTimeout = iTimeout + 1
+            return '3' # 未点赞 无需删除
+
+        if sServeType == '4': # 发布评论
+            sStaticId = keeper.DataKeeper.mActivityIdStaticIdList[sActivityId]
+            sTrendsId = request.form.get("sTrendsId")
+            sIntroduce = request.form.get("sDiscuss")
+            lTrend = mysql_tools.get_trends(sTrendsId)
+            if lTrend == None:
+                return '2' # 未找到相关动态
+            iIntroduceNumber = lTrend[6]
+            mIntroduce = eval(lTrend[8])
+            if sStaticId in mIntroduce:
+                iIntroduceNumber = iIntroduceNumber - 1
+                mIntroduce[sStaticId] = [sIntroduce,0,0,'[]','{}']
+                mysql_tools.update_trends_discuss(sTrendsId,
+                                                    str(iIntroduceNumber),
+                                                    str(mIntroduce))
+                return '3' # 重复评论 已覆盖
+            iIntroduceNumber = iIntroduceNumber + 1
+            mIntroduce[sStaticId] = [sIntroduce,0,0,'[]','{}']
+            mysql_tools.update_trends_discuss(sTrendsId,
+                                                str(iIntroduceNumber),
+                                                str(mIntroduce))
+            return '0' # 添加评论成功
+
+        if sServeType == '5': # 发布动态
+            sStaticId = keeper.DataKeeper.mActivityIdStaticIdList[sActivityId]
+            sTitle = request.form.get("sTitle")
+            sText = request.form.get("sText")
+            # 上传动态图片
+            # iPictureNumber = request.form.get("iPictureNumber")
+            # iTimeout = 1
+            # while iTimeout <= iPicTureNumber:
+            #   iTimeout = iTimeout + 1
+            #   bPictureData = request.form.get("Picture" + str(iTimeout))
+            # ############################################################
+            sPicturePosition = '000001'
+            lTrendsNumber = mysql_tools.get_trends_parameter()
+            iTrendsNumber = lTrendsNumber[0]
+            iTrendsNumber = iTrendsNumber + 1
+            mysql_tools.update_trends_parameter(str(iTrendsNumber))
+            mysql_tools.insert_trends(str(iTrendsNumber),str(sStaticId),
+                                      sTitle,sText,sPicturePosition)
+            lIdentityTrends = mysql_tools.get_identity_trends(str(sStaticId))
+            lTrendsId = eval(lIdentityTrends[1])
+            lTrendsId = [iTrendsNumber] + lTrendsId
+            lOldTrendsId = eval(lIdentityTrends[4])
+            lOldTrendsId = [iTrendsNumber] + lOldTrendsId
+            mysql_tools.update_identity_trends_trends(str(sStaticId),
+                                                      str(lTrendsId),
+                                                      str(lOldTrendsId))
+            lAttentionsFans = mysql_tools.get_identity_attentions_fans(str(sStaticId))
+            lFansStaticId = eval(lAttentionsFans[4])
+            for sFansStaticId in lFansStaticId:
+                lIdentityTrends = mysql_tools.get_identity_trends(str(sFansStaticId))
+                lNewTrends = eval(lIdentityTrends[3])
+                lNewTrends = [iTrendsNumber] + lNewTrends
+                mysql_tools.update_identity_trends_Old(str(sFansStaticId),
+                                                       str(lNewTrends))
+            return '0' + str(iTrendsNumber)
+
+        if sServeType == '7': # 评论点赞
+            print("评论点赞")
+            sTrendsId = request.form.get("sTrendsId")
+            sFromStaticId = keeper.DataKeeper.mActivityIdStaticIdList[sActivityId]
+            sToStaticId = request.form.get("sStaticId")
+            lTrends = mysql_tools.get_trends(str(sTrendsId))
+            mDiscuss = eval(lTrends[8])
+            iDiscussNumber = lTrends[6]
+            lDiscuss = mDiscuss[sToStaticId]
+            if lDiscuss == None:
+                return '2' # 未找到相关评论
+            lDiscussPraiseStaticId = eval(lDiscuss[3])
+            if sToStaticId in lDiscussPraiseStaticId:
+                return '0' # 已经点过赞
+            lDiscussPraiseStaticId = [sFromStaticId] + lDiscussPraiseStaticId
+            iDiscussPraiseNumber = lDiscuss[1]
+            iDiscussPraiseNumber = iDiscussPraiseNumber + 1
+            mDiscuss[sToStaticId][1] = iDiscussPraiseNumber
+            mDiscuss[sToStaticId][3] = str(lDiscussPraiseStaticId)
+            mysql_tools.update_trends_discuss(sTrendsId,iDiscussNumber,str(mDiscuss))
+            return '0'
+
+        if sServeType == '7': # 删除评论点赞
+            print("删除评论点赞")
+            sTrendsId = request.form.get("sTrendsId")
+            sStaticId = request.form.get("sStaticId")
+            lTrends = mysql_tools.get_trends(sTrendsId)
+            if lTrends == None:
+                return '21' # 未找到相关动态
+            mDiscuss = eval(lTrends[8])
+            iDiscussNumber = lTrends[6]
+            lDiscussPraiseStaticId = eval(mDiscuss[sStaticId][3])
+            iDiscussPraiseNumber = mDiscuss[sStaticId][1]
+            iLength = len(lDiscussPraiseStaticId)
+            iTimeout = 0
+            while iTimeout < iLength:
+                if sServeType == lDiscussPraiseStaticId[iTimeout]:
+                    lDiscussPraiseStaticId = lDiscussPraiseStaticId[0:iTimeout] \
+                                + lDiscussPraiseStaticId[iTimeout + 1:]
+                    iDiscussPraiseNumber = iDiscussPraiseNumber - 1
+                    mDiscuss[sStaticId][1] = iDiscussPraiseNumber
+                    mDiscuss[sStaticId][3] = str(lDiscussPraiseStaticId)
+                    mysql_tools.update_trends_discuss(sTrendsId,iDiscussNumber,str(mDiscuss))
+                    return '0' # 删除评论点赞成功
+                iTimeout = iTimeout + 1
+            return '22' # 未找到相关评论
+
+        if sServeType == '8': # 子评论点赞
+            print("子评论点赞")
+            sTrendsId = request.form.get("sTrendsId")
+            sFromStaticId = keeper.DataKeeper.mActivityIdStaticIdList[sActivityId]
+            sToStaticId1 = request.form.get("sStaticId1")
+            sToStaticId2 = request.form.get("sStaticId2")
+            lTrends = mysql_tools.get_trends(str(sTrendsId))
+            mDiscuss = eval(lTrends[8])
+            iDiscussNumber = lTrends[6]
+            lDiscuss = mDiscuss[sToStaticId1]
+            if lDiscuss == None:
+                return '2' # 评论不存在
+            mReply = eval(lDiscuss[4])
+            lReply = mReply[sToStaticId2]
+            lReplyPraiseStaticId = eval(lReply[2])
+            if sFromStaticId in lReplyPraiseStaticId:
+                return '0'
+            iReplyPraiseNumber = lReply[1]
+            iReplyPraiseNumber = iReplyPraiseNumber + 1
+            lReplyPraiseStaticId = [sFromStaticId] + lReplyPraiseStaticId
+            mReply[sToStaticId2][1] = iReplyPraiseNumber
+            mReply[sToStaticId2][2] = lReplyPraiseStaticId
+            mDiscuss[sToStaticId1][4] = str(mReply)
+            mysql_tools.update_trends_discuss(sTrendsId,iDiscussNumber,mDiscuss)
+            return '0'
+
+        if sServeType == '9': # 删除子评论点赞
+            print("删除子评论点赞")
+            sTrendsId = request.form.get("sTrendsId")
+            sFromStaticId = keeper.DataKeeper.mActivityIdStaticIdList[sActivityId]
+            sToStaticId1 = request.form.get("sStaticId1")
+            sToStaticId2 = request.form.get("sStaticId2")
+            lTrends = mysql_tools.get_trends(sTrendsId)
+            mDiscuss = eval(lTrends[8])
+            iDiscussNumber = lTrends[6]
+            lDiscuss = mDiscuss[sToStaticId1]
+            if lDiscuss == None:
+                return '2' # 未找到相关评论
+            mReply = eval(lDiscuss[4])
+            lReply = mReply[sToStaticId2]
+            lReplyPraiseStaticId = eval(lReply[2])
+            iLength = len(lReplyPraiseStaticId)
+            iTimeout = 0
+            while iTimeout < iLength:
+                if lReplyPraiseStaticId[iTimeout] == sFromStaticId:
+                    lReplyPraiseStaticId = lReplyPraiseStaticId[0:iTimeout] \
+                                           + lReplyPraiseStaticId[iTimeout + 1:]
+                    iReplyPraiseNumber = lReply[1]
+                    iReplyPraiseNumber = iReplyPraiseNumber - 1
+                    mReply[sToStaticId2][1] = iReplyPraiseNumber
+                    mReply[sToStaticId2][2] = str(lReplyPraiseStaticId)
+                    mDiscuss[sToStaticId1][4] = str(mReply)
+                    mysql_tools.update_trends_discuss(sTrendsId,iDiscussNumber,str(mDiscuss))
+                    return '0'
+                iTimeout = iTimeout + 1
+            return '2' # 未找到相关子评论点赞信息
+
+@app.route('/identity_attentions_fans',methods = ['GET','POST'])
+def identity_attentions_fans():
+    if request.method == 'GET':
+        return '未开放'
+
+    if request.method == 'POST':
+        sActivityId = request.form.get('sActivityId')
+        if sActivityId not in keeper.DataKeeper.mActivityIdStaticIdList:
+            return '1'
+        sServeType = request.form.get('sServeType')
+
+        if sServeType == '0': # 获取用户个人信息
+            print('获取用户个人信息')
+            sStaticId = keeper.DataKeeper.mActivityIdStaticIdList[sActivityId]
+            lIdentityAttentionsFans = mysql_tools.get_identity_attentions_fans(str(sStaticId))
+            sRespond = ""
+            sRespond = sRespond + str(lIdentityAttentionsFans[1]) \
+                       + ' ' + str(lIdentityAttentionsFans[2]) + '<spa1>'
+            lAttentionsStaticId = eval(lIdentityAttentionsFans[3])
+            if lAttentionsStaticId != []:
+                for sAttentionsStaticId in lAttentionsStaticId:
+                    sRespond = sRespond + str(sAttentionsStaticId) + ' '
+                sRespond = sRespond[0:-1]
+            sRespond = sRespond + '<spa2>'
+            lFansStaticId = eval(lIdentityAttentionsFans[4])
+            if lFansStaticId != []:
+                for sFansStaticId in lFansStaticId:
+                    sRespond = sRespond + str(sFansStaticId) + ' '
+                sRespond = sRespond[0:-1]
+            print(sRespond)
+            return '0' + sRespond
+
+        if sServeType == '1': # 获取 一般用户 一般信息 包括:关注数 粉丝数
+            print('获取基础信息')
+            sStaticId = request.form.get('sStaticId')
+            if sStaticId[0] == '[':
+                sStaticIds = eval(sStaticId)
+                if sStaticIds == []:
+                    return '0'
+                iLength = len(sStaticIds)
+                lIdentityAttentionsFans = mysql_tools.get_many_identity_attentions_fans(sStaticIds)
+                if str(lIdentityAttentionsFans)[1] == '(':
+                    if iLength > 1:
+                        return '2' # 数据获取不全
+                else:
+                    if iLength > len(lIdentityAttentionsFans):
+                        return '2' # 数据获取不全
+                if lIdentityAttentionsFans == None:
+                    return '0'
+                sRespond = ''
+                for lIdentity in lIdentityAttentionsFans:
+                    sRespond = sRespond + lIdentity[1] + ' ' + lIdentity[2] + ' '
+                sRespond = sRespond[0:-1]
+                print(sRespond)
+                return '0' + sRespond
+            else:
+                lIdentityAttentionsFans = mysql_tools.get_identity_attentions_fans(sStaticId)
+                sRespond = ''
+                sRespond = sRespond + str(lIdentityAttentionsFans[1]) + ' ' + str(lIdentityAttentionsFans[2])
+                print(sRespond)
+                return '0' + sRespond
+
+        if sServeType == '2': # 添加关注
+            print("添加关注")
+            sFromStaticId = keeper.DataKeeper.mActivityIdStaticIdList[sActivityId]
+            sToStaticId = eval(request.form.get('sStaticId'))
+            lIdentityFromAttentionsFans = mysql_tools.get_identity_attentions_fans(str(sFromStaticId))
+            lAttentionsStaticId = eval(lIdentityFromAttentionsFans[3])
+            if sToStaticId in lAttentionsStaticId:
+                return '2' # 已经添加过关注
+            lAttentionsStaticId = [sToStaticId] + lAttentionsStaticId
+            mysql_tools.update_identity_attentions_fans_attentions(str(sFromStaticId),
+                                                                   str(lAttentionsStaticId))
+            lIdentityToAttentionsFans = mysql_tools.get_identity_attentions_fans(str(sToStaticId))
+            lFansStaticId = eval(lIdentityToAttentionsFans[4])
+            lFansStaticId = [sFromStaticId] + lFansStaticId
+            mysql_tools.update_identity_attentions_fans_fans(str(sToStaticId),
+                                                             str(lFansStaticId))
+            return '0'
+
+        if sServeType == '3': # 删除关注
+            print("删除关注")
+            sFromStaticId = keeper.DataKeeper.mActivityIdStaticIdList[sActivityId]
+            sToStaticId = eval(request.form.get("sStaticId"))
+            lFromAttentionsFans = mysql_tools.get_identity_attentions_fans(str(sFromStaticId))
+            lAttentionsStaticId = eval(lFromAttentionsFans[3])
+            iLength = len(lAttentionsStaticId)
+            iTimeout = 0
+            while iTimeout < iLength:
+                if sToStaticId == lAttentionsStaticId[iTimeout]:
+                    lAttentionsStaticId = lAttentionsStaticId[0:iTimeout] \
+                                          + lAttentionsStaticId[iTimeout + 1:]
+                    mysql_tools.update_identity_attentions_fans_attentions(str(sFromStaticId),
+                                                                           str(lAttentionsStaticId))
+                    lToAttentionsFans = mysql_tools.get_identity_attentions_fans(str(sToStaticId))
+                    lFansStaticId = eval(lToAttentionsFans[4])
+                    iLength = len(lFansStaticId)
+                    iTimeout = 0
+                    while iTimeout < iLength:
+                        if sFromStaticId == lFansStaticId[iTimeout]:
+                            lFansStaticId = lFansStaticId[0:iTimeout] \
+                                            + lFansStaticId[iTimeout + 1:]
+                            mysql_tools.update_identity_attentions_fans_fans(str(sToStaticId),
+                                                                             str(lFansStaticId))
+                            return '0'
+                    return '0'
 
 @app.before_first_request
 def init_server():

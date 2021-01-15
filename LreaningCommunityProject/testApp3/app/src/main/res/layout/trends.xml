@@ -20,6 +20,7 @@
             android:layout_weight="0.8"/>
 
         <Button
+            android:onClick="onClickToSendTrendButton"
             android:text="发布动态"
             android:textColor="@color/black"
             android:textSize="16dp"
@@ -74,6 +75,7 @@
     </LinearLayout>
 
     <ListView
+        android:id="@+id/oldTrendsListView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.8">

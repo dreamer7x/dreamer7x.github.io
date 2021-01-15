@@ -1,6 +1,6 @@
-package com.example.testapp3;
+package com.example.testapp3.resources;
 
-public class FriendsUser {
+public class FriendsChatUser {
     public String staticId;
     public String isDrivingPassive;
     public String username;
@@ -10,7 +10,7 @@ public class FriendsUser {
     public String oldChat;
     public int newChatNumber;
 
-    public FriendsUser(String staticId,String isDrivingPassive,String  username,String motto,String picture){
+    public FriendsChatUser(String staticId, String isDrivingPassive, String  username, String motto, String picture){
         this.staticId = staticId;
         this.isDrivingPassive = isDrivingPassive;
         this.username = username;

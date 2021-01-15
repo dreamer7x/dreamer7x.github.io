@@ -13,6 +13,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:onClick="onClickToMineTrendsLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.18">
@@ -37,7 +38,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:textSize="18dp"
+                android:textSize="20dp"
                 android:textStyle="bold"
                 android:text="学习者"
                 android:textColor="@color/black"
@@ -49,7 +50,7 @@
                 android:layout_height="20dp"/>
 
             <TextView
-                android:textSize="16dp"
+                android:textSize="18dp"
                 android:textColor="#999"
                 android:text="好好学习天天向上"
                 android:layout_width="match_parent"
@@ -57,10 +58,8 @@
 
         </LinearLayout>
 
-        <Button
-            android:onClick="onClickToMineTrendsButton"
-            android:layout_gravity="center_vertical"
-            android:background="@color/white"
+        <TextView
+            android:gravity="center"
             android:textColor="#999"
             android:textSize="16dp"
             android:text="空间 >"
@@ -79,6 +78,7 @@
         android:orientation="horizontal">
 
         <LinearLayout
+            android:onClick="onClickToMineTrendsLinearLayout"
             android:layout_width="0dp"
             android:layout_weight="0.25"
             android:layout_height="match_parent"
@@ -109,6 +109,7 @@
             android:layout_height="match_parent"/>
 
         <LinearLayout
+            android:onClick="onClickToMineTrendsLinearLayout"
             android:layout_width="0dp"
             android:layout_weight="0.25"
             android:layout_height="match_parent"
@@ -139,6 +140,7 @@
             android:layout_height="match_parent"/>
 
         <LinearLayout
+            android:onClick="onClickToAttentionsLinearLayout"
             android:layout_width="0dp"
             android:layout_weight="0.25"
             android:layout_height="match_parent"
@@ -169,6 +171,7 @@
             android:layout_height="match_parent"/>
 
         <LinearLayout
+            android:onClick="onClickToFansLinearLayout"
             android:layout_width="0dp"
             android:layout_weight="0.25"
             android:layout_height="match_parent"

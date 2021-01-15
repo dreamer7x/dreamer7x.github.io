@@ -14,6 +14,7 @@
         android:orientation="horizontal">
 
         <Button
+            android:onClick="onClickAttentionsFansFinishButton"
             android:layout_gravity="center_vertical"
             android:background="#ddd"
             android:text="返 回"
@@ -38,6 +39,7 @@
         android:layout_weight="0.08">
 
         <Button
+            android:onClick="onClickToAttentionsButton"
             android:background="@color/white"
             android:textSize="18dp"
             android:textStyle="bold"
@@ -53,6 +55,7 @@
             android:layout_height="match_parent"/>
 
         <Button
+            android:onClick="onClickToFansButton"
             android:background="@color/white"
             android:textSize="18dp"
             android:textStyle="bold"
@@ -69,7 +72,10 @@
         android:layout_height="0dp"
         android:layout_weight="0.82">
 
+        <ListView
+            android:id="@+id/attentionsFansListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
     </LinearLayout>
-
 </LinearLayout>

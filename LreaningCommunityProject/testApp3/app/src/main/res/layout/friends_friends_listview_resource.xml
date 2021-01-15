@@ -19,7 +19,7 @@
 
             <ImageView
                 android:background="@drawable/round_style_grey"
-                android:id="@+id/userHeadPictureImageView"
+                android:id="@+id/friendsFriendsHeadPictureImageView"
                 android:layout_width="50dp"
                 android:layout_height="50dp"/>
 
@@ -27,14 +27,15 @@
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_weight="0.6"
+            android:layout_weight="0.8"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:gravity="center_vertical">
 
             <TextView
                 android:paddingTop="10dp"
                 android:gravity="center_vertical"
-                android:id="@+id/userNameTextView"
+                android:id="@+id/friendsFriendsUsernameTextView"
                 android:textSize="20dp"
                 android:textStyle="bold"
                 android:layout_width="match_parent"
@@ -42,30 +43,14 @@
                 android:layout_weight="0.6"/>
 
             <TextView
-                android:id="@+id/newChatTextView"
+                android:id="@+id/friendsFriendsMottoTextView"
                 android:textSize="16dp"
                 android:textColor="#999"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.5"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="0.1"
-            android:layout_height="match_parent"
-            android:gravity="center">
-
-            <TextView
-                android:textSize="20dp"
-                android:textStyle="bold"
-                android:id="@+id/newChatNumberTextView"
-                android:textColor="@color/white"
-                android:gravity="center"
-                android:layout_width="27dp"
-                android:layout_height="27dp" />
+                android:layout_weight="0.4"/>
 
         </LinearLayout>
     </LinearLayout>
+
 </LinearLayout>

@@ -12,11 +12,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Design.Light.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity
-            android:name=".ChatActivity"
-            android:windowSoftInputMode="stateUnspecified|adjustPan">
-
-        </activity>
+        <activity android:name=".MoreReplyActivity"></activity>
+        <activity android:name=".DiscussActivity" />
+        <activity android:name=".SendTrendActivity" />
+        <activity android:name=".SetActivity" />
+        <activity android:name=".AttentionsFansActivity" />
+        <activity android:name=".TrendActivity" />
+        <activity android:name=".MineTrendsActivity" />
+        <activity android:name=".OtherTrendsActivity" />
+        <activity android:name=".ChatActivity" />
         <activity android:name=".ClockInActivity" />
         <activity android:name=".MainWindowsActivity" />
         <activity android:name=".MainActivity">

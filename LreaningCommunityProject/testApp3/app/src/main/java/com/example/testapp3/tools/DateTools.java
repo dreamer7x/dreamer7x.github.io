@@ -1,4 +1,4 @@
-package com.example.testapp3;
+package com.example.testapp3.tools;
 
 import java.util.GregorianCalendar;
 
@@ -14,13 +14,32 @@ public class DateTools {
     public DateTools(String dateString){
         String[] dateStrings = dateString.split("\\s+");
         String yearString = dateStrings[0];
-        year = Integer.valueOf(yearString);
         String monthString = dateStrings[1];
-        month = Integer.valueOf(monthString);
         String dayString = dateStrings[2];
-        day = Integer.valueOf(dayString);
         String weekString = dateStrings[3];
-        week = Integer.valueOf(weekString);
+
+        year = Integer.valueOf(yearString);
+
+        if(monthString.charAt(0) == '0'){
+            month = Integer.valueOf(monthString.substring(1));
+        }
+        else{
+            month = Integer.valueOf(monthString);
+        }
+
+        if(dayString.charAt(0) == '0') {
+            day = Integer.valueOf(dayString.substring(1));
+        }
+        else{
+            day = Integer.valueOf(dateString);
+        }
+
+        if(weekString.charAt(0) == '0') {
+            week = Integer.valueOf(weekString.substring(1));
+        }
+        else{
+            week = Integer.valueOf(weekString);
+        }
 
         GregorianCalendar gregorianCalendar = (GregorianCalendar) GregorianCalendar.getInstance();
         boolean isLeapYear = gregorianCalendar.isLeapYear(year);

@@ -242,8 +242,12 @@ public class main {
         }
         System.out.println(a);
 
-        a = "I want to say<spa2>";
-        String[] b = a.split("<spa2>");
-        System.out.println(b.length);
+        a = "ni<isPraise>h<sStaticId>ao";
+        String[] b = a.split("(<isPraise>)|(<sStaticId>)");
+        c = "";
+        for(int i = 0;i < b.length;i++){
+            c = c + b[i] + " ";
+        }
+        System.out.println(c);
      }
 }

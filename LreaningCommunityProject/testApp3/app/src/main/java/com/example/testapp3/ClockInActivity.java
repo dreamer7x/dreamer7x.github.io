@@ -1,7 +1,6 @@
 package com.example.testapp3;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.PagerAdapter;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -15,10 +14,11 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Arrays;
+import com.example.testapp3.data.DataKeeper;
+import com.example.testapp3.data.ParameterKeeper;
+import com.example.testapp3.tools.DateTools;
+import com.example.testapp3.tools.HttpConnection;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,6 +34,8 @@ public class ClockInActivity extends AppCompatActivity {
     //工具
     private Button clockInButton;
     private TextView todayTextView;
+    private TextView monthTextView;
+    private TextView yearTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +47,8 @@ public class ClockInActivity extends AppCompatActivity {
     public void initView() {
         clockInString = DataKeeper.clockIn;
         clockInButton = findViewById(R.id.clockInButton);
+        monthTextView = findViewById(R.id.clockInMonthTextView);
+        yearTextView = findViewById(R.id.clockInYearTextView);
 
         // 获取权威时间
         HttpConnection connection = new HttpConnection(ParameterKeeper.dataHttpUrl + "/clock_in");
@@ -61,17 +65,31 @@ public class ClockInActivity extends AppCompatActivity {
             }
         }
         String respond = connection.getData();
-
+        if(respond == null){
+            Log.d("ClockInActivity", "错误: 打卡信息获取错误");
+            return;
+        }
         DateTools dateTools = new DateTools(respond);
         int month = dateTools.getMonth();
+        monthTextView.setText(String.valueOf(month));
         day = dateTools.getDay();
         int week = dateTools.getWeek();
         int monthDays = dateTools.getMonthDaysNumber(month);
+        int year = dateTools.getYear();
+        yearTextView.setText(String.valueOf(year));
+        Log.d("ClockInActivity","monthDays: " + monthDays + "\n"
+                + "week: " + week + "\n"
+                + "month: " + month + "\n"
+                + "day: " + day);
 
         firstWeek = week - (day % 7 - 1); // 获取当月 第一天星期数
+        if(firstWeek <= 0){
+            firstWeek = firstWeek + 7;
+        }
         if (firstWeek == 8) {
             firstWeek = 1;
         }
+        Log.d("ClockInActivity","firstWeek: " + firstWeek);
 
         int lastMonthDaysNumber; // 获取 上个月最大天数
         if (month == 1) {
@@ -87,6 +105,8 @@ public class ClockInActivity extends AppCompatActivity {
         } else {
             length = size / 7;
         }
+        Log.d("ClockInActivity", "size: " + size + "\n"
+                + "length: " + length);
 
         int[] days = new int[length * 7]; // 获取 text 输出流
         int i;

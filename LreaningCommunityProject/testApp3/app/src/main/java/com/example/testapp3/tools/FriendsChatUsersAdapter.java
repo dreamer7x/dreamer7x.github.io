@@ -1,4 +1,4 @@
-package com.example.testapp3;
+package com.example.testapp3.tools;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,14 +11,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.testapp3.resources.FriendsChatUser;
+import com.example.testapp3.R;
+
 import java.util.List;
 
-public class FriendsUsersAdapter extends ArrayAdapter<FriendsUser> {
+public class FriendsChatUsersAdapter extends ArrayAdapter<FriendsChatUser> {
 
     private int layoutResourceId;
 
-    public FriendsUsersAdapter(Context context, int layoutResourceId, List<FriendsUser> friendsUserListList) {
-        super(context, layoutResourceId, friendsUserListList);
+    public FriendsChatUsersAdapter(Context context, int layoutResourceId, List<FriendsChatUser> friendsChatUserListList) {
+        super(context, layoutResourceId, friendsChatUserListList);
         this.layoutResourceId = layoutResourceId;
     }
 
@@ -32,7 +35,7 @@ public class FriendsUsersAdapter extends ArrayAdapter<FriendsUser> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        FriendsUser friendsUser = getItem(position); // 获取元素数据
+        FriendsChatUser friendsChatUser = getItem(position); // 获取元素数据
         View view;
         ViewHolder viewHolder;
 
@@ -51,11 +54,11 @@ public class FriendsUsersAdapter extends ArrayAdapter<FriendsUser> {
         }
 
         // viewHolder.headPictureImageView.setImageResource();
-        viewHolder.usernameTextView.setText(friendsUser.username);
-        if (friendsUser.newChatNumber != 0) {
+        viewHolder.usernameTextView.setText(friendsChatUser.username);
+        if (friendsChatUser.newChatNumber != 0) {
             viewHolder.newChatNumberTextView.setBackgroundResource(R.drawable.round_style_red);
-            viewHolder.newChatNumberTextView.setText(String.valueOf(friendsUser.newChatNumber));
-            viewHolder.newChatTextView.setText(friendsUser.newChat);
+            viewHolder.newChatNumberTextView.setText(String.valueOf(friendsChatUser.newChatNumber));
+            viewHolder.newChatTextView.setText(friendsChatUser.newChat);
         }
         return view;
     }

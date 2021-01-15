@@ -83,6 +83,32 @@ def get_many_identity_attentions_fans(sStaticIds):
     lRespond = cCursor.fetchmany(len(sStaticIds))
     return lRespond
 
+def update_identity_attentions_fans_attentions(sStaticId,iAttentionsNumber,sAttentionsStaticId):
+    conMysqlConnection = pymysql.connect(host="localhost",
+                                         user='attentions_fans_manager',
+                                         password='123',
+                                         database='test',
+                                         charset='utf8')
+    cCursor = conMysqlConnection.cursor()
+    sSql = 'update identity_attentions_fans set iAttentionsNumber = ' + str(iAttentionsNumber) \
+           + ',sAttentionsStaticId = \'' + sAttentionsStaticId + '\'' \
+           + ' where sStaticId = ' + sStaticId
+    cCursor.execute(sSql)
+    conMysqlConnection.commit()
+
+def update_identity_attentions_fans_fans(sStaticId,iFansNumber,sFansStaticId):
+    conMysqlConnection = pymysql.connect(host="localhost",
+                                         user='attentions_fans_manager',
+                                         password='123',
+                                         database='test',
+                                         charset='utf8')
+    cCursor = conMysqlConnection.cursor()
+    sSql = 'update identity_attentions_fans set iFansNumber = ' + str(iFansNumber) \
+           + ',sFansStaticId = \'' + sFansStaticId + '\'' \
+           + ' where sStaticId = ' + sStaticId
+    cCursor.execute(sSql)
+    conMysqlConnection.commit()
+
 ######################################################################################################################
 
 # identity_chat
@@ -184,7 +210,7 @@ def update_identity_chat_new_old_driving_chat(sStaticId,sNewDrivingChat,sOldDriv
 
 ######################################################################################################################
 
-# identity_friends
+# identity_friends_manager
 
 ######################################################################################################################
 
@@ -199,9 +225,61 @@ def get_identity_friends(sStaticId):
     cCursor.execute(sSql)
     return cCursor.fetchone()
 
+def update_identity_friends_old_new(sStaticId,lFriendsId,lOldNewFriendsStaticId,mIntroduce):
+    conMysqlConnection = pymysql.connect(host="localhost",
+                                         user='identity_friends_manager',
+                                         password='123',
+                                         database='test',
+                                         charset='utf8')
+    cCursor = conMysqlConnection.cursor()
+    sSql = 'update identity_friends set sFriendsStaticId = \'' + lFriendsId \
+           + '\',sOldNewFriendsStaticId = \'' + lOldNewFriendsStaticId \
+           + '\',sIntroduce = \'' + mIntroduce \
+           + '\' where sStaticId = ' + sStaticId
+    cCursor.execute(sSql)
+    conMysqlConnection.commit()
+
+def update_identity_friends_old_new_new(sStaticId,lOldNewFriendsStaticId,lNewFriendsStaticId):
+    conMysqlConnection = pymysql.connect(host="localhost",
+                                         user='identity_friends_manager',
+                                         password='123',
+                                         database='test',
+                                         charset='utf8')
+    cCursor = conMysqlConnection.cursor()
+    sSql = 'update identity_friends set sOldNewFriendsStaticId = \'' + lOldNewFriendsStaticId \
+           + '\',sNewFriendsStaticId = \'' + lNewFriendsStaticId \
+           + '\' where sStaticId = ' + sStaticId
+    cCursor.execute(sSql)
+    conMysqlConnection.commit()
+
+def update_identity_friends_new(sStaticId,lNewFriendsStaticId,mIntroduce):
+    conMysqlConnection = pymysql.connect(host="localhost",
+                                         user='identity_friends_manager',
+                                         password='123',
+                                         database='test',
+                                         charset='utf8')
+    cCursor = conMysqlConnection.cursor()
+    sSql = 'update identity_friends set sNewFriendsStaticId = \'' + lNewFriendsStaticId \
+           + '\',sIntroduce = \'' + mIntroduce \
+           + '\' where sStaticId = ' + sStaticId
+    cCursor.execute(sSql)
+    conMysqlConnection.commit()
+
+def update_identity_friends_friends(sStaticId,lFriendsStaticId):
+    conMysqlConnection = pymysql.connect(host="localhost",
+                                         user='identity_friends_manager',
+                                         password='123',
+                                         database='test',
+                                         charset='utf8')
+    cCursor = conMysqlConnection.cursor()
+    sSql = 'update identity_friends set sFriendsStaticId = \'' + lFriendsStaticId \
+           + '\' where sStaticId = ' + sStaticId
+    cCursor.execute(sSql)
+    conMysqlConnection.commit()
+
 ######################################################################################################################
 
-# identity_trends
+# identity_trends_manager
 
 ######################################################################################################################
 
@@ -216,7 +294,22 @@ def get_identity_trends(sStaticId):
     cCursor.execute(sSql)
     return cCursor.fetchone()
 
-def update_identity_trends_trends(sStaticId,sTrendsId):
+def get_many_identity_trends(sStaticIds):
+    conMysqlConnection = pymysql.connect(host="localhost",
+                                         user='identity_trends_manager',
+                                         password='123',
+                                         database='test',
+                                         charset='utf8')
+    cCursor = conMysqlConnection.cursor()
+    if sStaticIds == []:
+        return None
+    sSql = 'select * from identity_trends where sStaticId = ' + sStaticIds[0]
+    for sStaticId in sStaticIds[1:]:
+        sSql = sSql + ' or sStaticId = ' + sStaticId
+    cCursor.execute(sSql)
+    return cCursor.fetchmany(len(sStaticIds))
+
+def update_identity_trends_trends(sStaticId,sTrendsId,sOldTrendsId):
     conMysqlConnection = pymysql.connect(host="localhost",
                                          user='identity_trends_manager',
                                          password='123',
@@ -224,20 +317,32 @@ def update_identity_trends_trends(sStaticId,sTrendsId):
                                          charset='utf8')
     cCursor = conMysqlConnection.cursor()
     sSql = 'update identity_trends set sTrendsId = \'' + sTrendsId \
-           + '\' where sStaticId = ' + sStaticId
+           + '\',sOldTrendsId = \'' + sOldTrendsId + '\'' \
+           + ' where sStaticId = ' + sStaticId
     cCursor.execute(sSql)
     conMysqlConnection.commit()
 
-def update_identity_trends_New_Old(sStaticId,sNewTrendsId,sOldTrendsId):
+def update_identity_trends_Old(sStaticId,sOldTrendsId):
     conMysqlConnection = pymysql.connect(host="localhost",
                                          user='identity_trends_manager',
                                          password='123',
                                          database='test',
                                          charset='utf8')
     cCursor = conMysqlConnection.cursor()
-    sSql = 'update identity_trends set sNewTrendsId = \'' + sNewTrendsId \
-           + '\',sOldTrendsId = \'' + sOldTrendsId \
-           + '\' where sStaticId = \'' + sStaticId + '\''
+    sSql = 'update identity_trends set sNewTrendsId = \'[]\',sOldTrendsId = \'' \
+           + sOldTrendsId + '\' where sStaticId = \'' + sStaticId + '\''
+    cCursor.execute(sSql)
+    conMysqlConnection.commit()
+
+def update_identity_trends_new(sStaticId,sNewTrendsId):
+    conMysqlConnection = pymysql.connect(host="localhost",
+                                         user='identity_trends_manager',
+                                         password='123',
+                                         database='test',
+                                         charset='utf8')
+    cCursor = conMysqlConnection.cursor()
+    sSql = 'update identity_trends set sNemTrendsId = \'' + sNewTrendsId \
+           + '\' where sStaticId' + sStaticId
     cCursor.execute(sSql)
     conMysqlConnection.commit()
 
@@ -266,11 +371,51 @@ def get_many_trends(lTrendIds):
                                          charset='utf8')
     cCursor = conMysqlConnection.cursor()
     sTrendId = lTrendIds[0]
-    sSql = 'select * from trends where sTrendsId = ' + sTrendId
+    sSql = 'select * from trends where sTrendsId = ' + str(sTrendId)
     for sTrendId in lTrendIds[1:]:
-        sSql = sSql + ' or sTrendId = ' + sTrendId
+        sSql = sSql + ' or sTrendsId = ' + str(sTrendId)
     cCursor.execute(sSql)
-    return cCursor.fetchmany()
+    return cCursor.fetchmany(len(lTrendIds))
+
+def update_trends_praise(sTrendsId,sPraiseNumber,sPraiseStaticId):
+    conMysqlConnection = pymysql.connect(host="localhost",
+                                         user='trends_manager',
+                                         password='123',
+                                         database='test',
+                                         charset='utf8')
+    cCursor = conMysqlConnection.cursor()
+    sSql = 'update trends set iPraiseNumber = ' + sPraiseNumber \
+           + ',sPraiseStaticId = \'' + sPraiseStaticId \
+           + '\' where sTrendsId = ' + sTrendsId
+    cCursor.execute(sSql)
+    conMysqlConnection.commit()
+
+def update_trends_discuss(sTrendsId,sDiscussNumber,sDiscuss):
+    conMysqlConnection = pymysql.connect(host="localhost",
+                                         user='trends_manager',
+                                         password='123',
+                                         database='test',
+                                         charset='utf8')
+    cCursor = conMysqlConnection.cursor()
+    sSql = 'update trends set iDiscussNumber = ' + sDiscussNumber \
+           + ',sDiscuss = \'' + sDiscuss \
+           + '\' where sTrendsId = ' + sTrendsId
+    cCursor.execute(sSql)
+    conMysqlConnection.commit()
+
+def insert_trends(sTrendsId,sStaticId,sTitle,sText,sPicturePosition):
+    conMysqlConnection = pymysql.connect(host="localhost",
+                                         user='trends_manager',
+                                         password='123',
+                                         database='test',
+                                         charset='utf8')
+    cCursor = conMysqlConnection.cursor()
+    sSql = 'insert trends(sTrendsId,sStaticId,sTitle,sText,sPicturePosition,' \
+           + 'iPraiseNumber,iDiscussNumber,sPraiseStaticId,sDiscuss) values(' \
+           + sTrendsId + ',' + sStaticId + ',\'' + sTitle + '\',\'' \
+           + sText + '\',\'' + sPicturePosition + "\',0,0,\'[]\',\'{}\')"
+    cCursor.execute(sSql)
+    conMysqlConnection.commit()
 
 ######################################################################################################################
 
@@ -356,7 +501,35 @@ def insert_chat(sStaticId1,sStaticId2,sNewChat):
                                          database='test',
                                          charset='utf8')
     cCursor = conMysqlConnection.cursor()
-    sSql = 'insert chat(sStaticId1,sStaticId2,sNewChat,sOldeChat,iTimeout) values(' \
+    sSql = 'insert chat(sStaticId1,sStaticId2,sNewChat,sOldChat,iTimeout) values(' \
            + sStaticId1 + ',' + sStaticId2 + ',\'' + sNewChat + '\',\'[]\',30)'
+    cCursor.execute(sSql)
+    conMysqlConnection.commit()
+
+######################################################################################################################
+
+# trends_parameter
+
+######################################################################################################################
+
+def get_trends_parameter():
+    conMysqlConnection = pymysql.connect(host="localhost",
+                                         user='trends_parameter_manager',
+                                         password='123',
+                                         database='test',
+                                         charset='utf8')
+    cCursor = conMysqlConnection.cursor()
+    sSql = 'select iTrendsNumber from trends_parameter'
+    cCursor.execute(sSql)
+    return cCursor.fetchone()
+
+def update_trends_parameter(iTrendsNumber):
+    conMysqlConnection = pymysql.connect(host="localhost",
+                                         user='trends_parameter_manager',
+                                         password='123',
+                                         database='test',
+                                         charset='utf8')
+    cCursor = conMysqlConnection.cursor()
+    sSql = 'update trends_parameter set iTrendsNumber = ' + iTrendsNumber
     cCursor.execute(sSql)
     conMysqlConnection.commit()

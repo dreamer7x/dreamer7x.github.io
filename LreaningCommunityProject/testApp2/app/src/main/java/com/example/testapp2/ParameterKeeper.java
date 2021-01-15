@@ -10,7 +10,7 @@ public class ParameterKeeper {
     public static String emailRegularExpression = "^\\d{6,10}@qq.com\\s*$";
 
     //服务器网址
-    public static final String httpUrl = "http://10.131.234.226:5000";
+    public static final String httpUrl = "http://10.132.43.80:5000";
 
     //登录类别
     public static int loginPassword = 0;

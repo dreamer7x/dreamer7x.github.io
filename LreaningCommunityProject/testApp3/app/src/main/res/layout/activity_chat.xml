@@ -8,8 +8,7 @@
     <LinearLayout
         android:background="#ddd"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.1"
+        android:layout_height="60dp"
         android:orientation="horizontal">
 
         <Button
@@ -39,7 +38,7 @@
         android:id="@+id/chatScrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.8">
+        android:layout_weight="1">
 
         <LinearLayout
             android:id="@+id/chatLinearLayout"
@@ -95,10 +94,10 @@
     </ScrollView>
 
     <LinearLayout
+        android:windowSoftInputMode="stateUnspecified|adjustPan"
         android:background="#ddd"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.1"
+        android:layout_height="60dp"
         android:orientation="horizontal">
 
         <View
@@ -109,8 +108,8 @@
         <EditText
             android:padding="10dp"
             android:id="@+id/chatSendChatEditText"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="12dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:background="@drawable/round_style_white"

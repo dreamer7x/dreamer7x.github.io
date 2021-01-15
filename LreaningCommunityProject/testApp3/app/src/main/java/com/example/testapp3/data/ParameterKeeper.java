@@ -1,4 +1,4 @@
-package com.example.testapp3;
+package com.example.testapp3.data;
 
 /**
  * 该类用以保存程序执行所需要的静态配置资源

@@ -4,30 +4,28 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.material.button.MaterialButton;
+import com.example.testapp3.data.DataKeeper;
+import com.example.testapp3.data.ParameterKeeper;
+import com.example.testapp3.resources.FriendsChatUser;
+import com.example.testapp3.tools.HttpConnection;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.zip.Inflater;
 
 public class ChatActivity extends AppCompatActivity {
 
-    private FriendsUser friendsUser;
+    private FriendsChatUser friendsChatUser;
     private LinearLayout linearLayout;
     private ScrollView scrollView;
     private EditText editText;
@@ -38,12 +36,13 @@ public class ChatActivity extends AppCompatActivity {
         public void handleMessage(@NonNull Message msg) {
             switch (msg.what){
                 case 0: // 循环线程 获取新信息
+                    Log.d("ChatActivity","尝试 更新聊天数据");
                     HttpConnection connection = new HttpConnection(ParameterKeeper.dataHttpUrl + "/chat");
                     Map<String,String> request = new HashMap<>();
-                    request.put("sActivityId",DataKeeper.activityId);
+                    request.put("sActivityId", DataKeeper.activityId);
                     request.put("sServeType","3");
-                    request.put("sDrivingPassive",friendsUser.isDrivingPassive);
-                    request.put("sStaticId",friendsUser.staticId);
+                    request.put("sDrivingPassive", friendsChatUser.isDrivingPassive);
+                    request.put("sStaticId", friendsChatUser.staticId);
                     connection.sendPOST(request);
                     while(connection.getOnWork() != 2){
                         try {
@@ -60,7 +59,7 @@ public class ChatActivity extends AppCompatActivity {
                     else{
                         switch (respond.charAt(0)){
                             case '0':
-                                if(friendsUser.isDrivingPassive.equals("0")) {
+                                if(friendsChatUser.isDrivingPassive.equals("0")) {
                                     String[] chatStrings = respond.substring(1).split("<spa2>");
                                     for(int i = 0;i < chatStrings.length;i++){
                                         LayoutInflater inflater = getLayoutInflater();
@@ -68,7 +67,7 @@ public class ChatActivity extends AppCompatActivity {
                                         TextView userNameTextView = view.findViewById(R.id.chatUserNameTextView);
                                         TextView contentTextView = view.findViewById(R.id.chatContentTextView);
                                         // ImageView headPictureImageView = view.findViewById(R.id.chatHeadPictureImageView);
-                                        userNameTextView.setText(friendsUser.username);
+                                        userNameTextView.setText(friendsChatUser.username);
                                         contentTextView.setText(chatStrings[i]);
                                         linearLayout.addView(view);
                                     }
@@ -81,7 +80,7 @@ public class ChatActivity extends AppCompatActivity {
                                         TextView userNameTextView = view.findViewById(R.id.chatUserNameTextView);
                                         TextView contentTextView = view.findViewById(R.id.chatContentTextView);
                                         // ImageView headPictureImageView = view.findViewById(R.id.chatHeadPictureImageView);
-                                        userNameTextView.setText(friendsUser.username);
+                                        userNameTextView.setText(friendsChatUser.username);
                                         contentTextView.setText(chatStrings[i]);
                                         linearLayout.addView(view);
                                     }
@@ -119,26 +118,26 @@ public class ChatActivity extends AppCompatActivity {
         scrollView = findViewById(R.id.chatScrollView);
         linearLayout = findViewById(R.id.chatLinearLayout);
         editText = findViewById(R.id.chatSendChatEditText);
-        friendsUser = DataKeeper.friendsUserList.get(position);
+        friendsChatUser = DataKeeper.friendsChatUserList.get(position);
 
         LayoutInflater inflater = getLayoutInflater();
 
-        if(!friendsUser.oldChat.equals("")){
-            if(friendsUser.isDrivingPassive.equals("0")) {
-                String[] oldToChats = friendsUser.oldChat.split("<spa2>");
+        if(!friendsChatUser.oldChat.equals("")){
+            if(friendsChatUser.isDrivingPassive.equals("0")) {
+                String[] oldToChats = friendsChatUser.oldChat.split("<spa2>");
                 String testAnswer = "";
                 for(int i = 0;i < oldToChats.length;i++) {
                     testAnswer = testAnswer + oldToChats[i] + " ";
                 }
                 Log.d("ChatActivity", testAnswer);
-                for(int i = 0;i < oldToChats.length;i++){
+                for(int i = 0;i < oldToChats.length - 1;i++){
                     String[] chats = oldToChats[i].split("<spa1>");
                     if(chats.length == 1){
                         View view = inflater.inflate(R.layout.chat_left_resource,null,false);
                         TextView userNameTextView = view.findViewById(R.id.chatUserNameTextView);
                         TextView contentTextView = view.findViewById(R.id.chatContentTextView);
                         // ImageView headPictureImageView = view.findViewById(R.id.chatHeadPictureImageView);
-                        userNameTextView.setText(friendsUser.username);
+                        userNameTextView.setText(friendsChatUser.username);
                         contentTextView.setText(chats[0]);
                         linearLayout.addView(view);
                     }
@@ -152,31 +151,64 @@ public class ChatActivity extends AppCompatActivity {
                             contentTextView.setText(chats[j]);
                             linearLayout.addView(view);
                         }
-                        View view = inflater.inflate(R.layout.chat_left_resource,null,false);
+                        if(chats[chats.length - 1].equals("")) {
+                            View view = inflater.inflate(R.layout.chat_left_resource, null, false);
+                            TextView userNameTextView = view.findViewById(R.id.chatUserNameTextView);
+                            TextView contentTextView = view.findViewById(R.id.chatContentTextView);
+                            // ImageView headPictureImageView = view.findViewById(R.id.chatHeadPictureImageView);
+                            userNameTextView.setText(friendsChatUser.username);
+                            contentTextView.setText(chats[chats.length - 1]);
+                            linearLayout.addView(view);
+                        }
+                    }
+                }
+                if(oldToChats[oldToChats.length - 1].endsWith("<spa1>")){
+                    String[] chats = oldToChats[oldToChats.length - 1].split("<spa1>");
+                    for(int j = 0;j < chats.length;j++){
+                        View view = inflater.inflate(R.layout.chat_right_resource,null,false);
                         TextView userNameTextView = view.findViewById(R.id.chatUserNameTextView);
                         TextView contentTextView = view.findViewById(R.id.chatContentTextView);
                         // ImageView headPictureImageView = view.findViewById(R.id.chatHeadPictureImageView);
-                        userNameTextView.setText(friendsUser.username);
-                        contentTextView.setText(chats[0]);
+                        userNameTextView.setText(DataKeeper.username);
+                        contentTextView.setText(chats[j]);
                         linearLayout.addView(view);
                     }
+                }
+                else{
+                    String[] chats = oldToChats[oldToChats.length - 1].split("<spa1>");
+                    for(int j = 0;j < chats.length - 1;j++){
+                        View view = inflater.inflate(R.layout.chat_right_resource,null,false);
+                        TextView userNameTextView = view.findViewById(R.id.chatUserNameTextView);
+                        TextView contentTextView = view.findViewById(R.id.chatContentTextView);
+                        // ImageView headPictureImageView = view.findViewById(R.id.chatHeadPictureImageView);
+                        userNameTextView.setText(DataKeeper.username);
+                        contentTextView.setText(chats[j]);
+                        linearLayout.addView(view);
+                    }
+                    View view = inflater.inflate(R.layout.chat_left_resource,null,false);
+                    TextView userNameTextView = view.findViewById(R.id.chatUserNameTextView);
+                    TextView contentTextView = view.findViewById(R.id.chatContentTextView);
+                    // ImageView headPictureImageView = view.findViewById(R.id.chatHeadPictureImageView);
+                    userNameTextView.setText(friendsChatUser.username);
+                    contentTextView.setText(chats[chats.length - 1]);
+                    linearLayout.addView(view);
                 }
             }
             else{
-                String[] oldToChats = friendsUser.oldChat.split("<spa1>");
+                String[] oldToChats = friendsChatUser.oldChat.split("<spa1>");
                 String testAnswer = "";
                 for(int i = 0;i < oldToChats.length;i++) {
                     testAnswer = testAnswer + oldToChats[i] + " ";
                 }
                 Log.d("ChatActivity", testAnswer);
-                for(int i = 0;i < oldToChats.length;i++){
+                for(int i = 0;i < oldToChats.length - 1;i++){
                     String[] chats = oldToChats[i].split("<spa1>");
                     if(chats.length == 1){
                         View view = inflater.inflate(R.layout.chat_left_resource,null,false);
                         TextView userNameTextView = view.findViewById(R.id.chatUserNameTextView);
                         TextView contentTextView = view.findViewById(R.id.chatContentTextView);
                         // ImageView headPictureImageView = view.findViewById(R.id.chatHeadPictureImageView);
-                        userNameTextView.setText(friendsUser.username);
+                        userNameTextView.setText(friendsChatUser.username);
                         contentTextView.setText(chats[0]);
                         linearLayout.addView(view);
                     }
@@ -194,10 +226,48 @@ public class ChatActivity extends AppCompatActivity {
                         TextView userNameTextView = view.findViewById(R.id.chatUserNameTextView);
                         TextView contentTextView = view.findViewById(R.id.chatContentTextView);
                         // ImageView headPictureImageView = view.findViewById(R.id.chatHeadPictureImageView);
-                        userNameTextView.setText(friendsUser.username);
+                        userNameTextView.setText(friendsChatUser.username);
                         contentTextView.setText(chats[0]);
                         linearLayout.addView(view);
                     }
+                }
+                if(oldToChats[oldToChats.length - 1].length() > 5 && oldToChats[oldToChats.length - 1].endsWith("<spa2>")){
+                    String[] chats = oldToChats[oldToChats.length - 1].split("<spa2>");
+                    for(int j = 0;j < chats.length - 1;j++){
+                        View view = inflater.inflate(R.layout.chat_right_resource,null,false);
+                        TextView userNameTextView = view.findViewById(R.id.chatUserNameTextView);
+                        TextView contentTextView = view.findViewById(R.id.chatContentTextView);
+                        // ImageView headPictureImageView = view.findViewById(R.id.chatHeadPictureImageView);
+                        userNameTextView.setText(DataKeeper.username);
+                        contentTextView.setText(chats[j]);
+                        linearLayout.addView(view);
+                    }
+                    View view = inflater.inflate(R.layout.chat_right_resource,null,false);
+                    TextView userNameTextView = view.findViewById(R.id.chatUserNameTextView);
+                    TextView contentTextView = view.findViewById(R.id.chatContentTextView);
+                    // ImageView headPictureImageView = view.findViewById(R.id.chatHeadPictureImageView);
+                    userNameTextView.setText(DataKeeper.username);
+                    contentTextView.setText(chats[chats.length - 1]);
+                    linearLayout.addView(view);
+                }
+                else{
+                    String[] chats = oldToChats[oldToChats.length - 1].split("<spa2>");
+                    for(int j = 0;j < chats.length - 1;j++){
+                        View view = inflater.inflate(R.layout.chat_left_resource,null,false);
+                        TextView userNameTextView = view.findViewById(R.id.chatUserNameTextView);
+                        TextView contentTextView = view.findViewById(R.id.chatContentTextView);
+                        // ImageView headPictureImageView = view.findViewById(R.id.chatHeadPictureImageView);
+                        userNameTextView.setText(DataKeeper.username);
+                        contentTextView.setText(chats[j]);
+                        linearLayout.addView(view);
+                    }
+                    View view = inflater.inflate(R.layout.chat_left_resource,null,false);
+                    TextView userNameTextView = view.findViewById(R.id.chatUserNameTextView);
+                    TextView contentTextView = view.findViewById(R.id.chatContentTextView);
+                    // ImageView headPictureImageView = view.findViewById(R.id.chatHeadPictureImageView);
+                    userNameTextView.setText(friendsChatUser.username);
+                    contentTextView.setText(chats[chats.length - 1]);
+                    linearLayout.addView(view);
                 }
             }
         }
@@ -206,8 +276,8 @@ public class ChatActivity extends AppCompatActivity {
             Map<String,String> request = new HashMap<>();
             request.put("sActivityId",DataKeeper.activityId);
             request.put("sServeType","1");
-            request.put("sDrivingPassive",friendsUser.isDrivingPassive);
-            request.put("sStaticId",friendsUser.staticId);
+            request.put("sDrivingPassive", friendsChatUser.isDrivingPassive);
+            request.put("sStaticId", friendsChatUser.staticId);
             connection.sendPOST(request);
             while(connection.getOnWork() != 2){
                 try {
@@ -224,89 +294,141 @@ public class ChatActivity extends AppCompatActivity {
             else{
                 switch (respond.charAt(0)){
                     case '0':
-                        friendsUser.oldChat = respond.substring(1);
-                        if(friendsUser.isDrivingPassive.equals("0")) {
-                            String[] oldToChats = friendsUser.oldChat.split("<spa2>");
-                            String testAnswer = "";
-                            for(int i = 0;i < oldToChats.length;i++) {
-                                testAnswer = testAnswer + oldToChats[i] + " ";
-                            }
-                            Log.d("ChatActivity", testAnswer);
-                            for(int i = 0;i < oldToChats.length;i++){
-                                String[] chats = oldToChats[i].split("<spa1>");
-                                if(chats.length == 1){
-                                    View view = inflater.inflate(R.layout.chat_left_resource,null,false);
-                                    TextView userNameTextView = view.findViewById(R.id.chatUserNameTextView);
-                                    TextView contentTextView = view.findViewById(R.id.chatContentTextView);
-                                    // ImageView headPictureImageView = view.findViewById(R.id.chatHeadPictureImageView);
-                                    userNameTextView.setText(friendsUser.username);
-                                    contentTextView.setText(chats[0]);
-                                    linearLayout.addView(view);
-                                }
-                                else{
-                                    for(int j = 0;j < chats.length - 1;j++){
-                                        View view = inflater.inflate(R.layout.chat_left_resource,null,false);
-                                        TextView userNameTextView = view.findViewById(R.id.chatUserNameTextView);
-                                        TextView contentTextView = view.findViewById(R.id.chatContentTextView);
-                                        // ImageView headPictureImageView = view.findViewById(R.id.chatHeadPictureImageView);
-                                        userNameTextView.setText(DataKeeper.username);
-                                        contentTextView.setText(chats[j]);
-                                        linearLayout.addView(view);
-                                    }
-                                    View view = inflater.inflate(R.layout.chat_left_resource,null,false);
-                                    TextView userNameTextView = view.findViewById(R.id.chatUserNameTextView);
-                                    TextView contentTextView = view.findViewById(R.id.chatContentTextView);
-                                    // ImageView headPictureImageView = view.findViewById(R.id.chatHeadPictureImageView);
-                                    userNameTextView.setText(friendsUser.username);
-                                    contentTextView.setText(chats[0]);
-                                    linearLayout.addView(view);
-                                }
-                            }
-                        }
-                        else{
-                            String[] oldToChats = friendsUser.oldChat.split("<spa1>");
-                            String testAnswer = "";
-                            for(int i = 0;i < oldToChats.length;i++) {
-                                testAnswer = testAnswer + oldToChats[i] + " ";
-                            }
-                            Log.d("ChatActivity", testAnswer);
-                            for(int i = 0;i < oldToChats.length;i++){
-                                String[] chats = oldToChats[i].split("<spa1>");
-                                if(chats.length == 1){
-                                    View view = inflater.inflate(R.layout.chat_left_resource,null,false);
-                                    TextView userNameTextView = view.findViewById(R.id.chatUserNameTextView);
-                                    TextView contentTextView = view.findViewById(R.id.chatContentTextView);
-                                    // ImageView headPictureImageView = view.findViewById(R.id.chatHeadPictureImageView);
-                                    userNameTextView.setText(friendsUser.username);
-                                    contentTextView.setText(chats[0]);
-                                    linearLayout.addView(view);
-                                }
-                                else{
-                                    for(int j = 0;j < chats.length - 1;j++){
-                                        View view = inflater.inflate(R.layout.chat_left_resource,null,false);
-                                        TextView userNameTextView = view.findViewById(R.id.chatUserNameTextView);
-                                        TextView contentTextView = view.findViewById(R.id.chatContentTextView);
-                                        // ImageView headPictureImageView = view.findViewById(R.id.chatHeadPictureImageView);
-                                        userNameTextView.setText(DataKeeper.username);
-                                        contentTextView.setText(chats[j]);
-                                        linearLayout.addView(view);
-                                    }
-                                    View view = inflater.inflate(R.layout.chat_left_resource,null,false);
-                                    TextView userNameTextView = view.findViewById(R.id.chatUserNameTextView);
-                                    TextView contentTextView = view.findViewById(R.id.chatContentTextView);
-                                    // ImageView headPictureImageView = view.findViewById(R.id.chatHeadPictureImageView);
-                                    userNameTextView.setText(friendsUser.username);
-                                    contentTextView.setText(chats[0]);
-                                    linearLayout.addView(view);
-                                }
-                            }
-
+                        if(respond.length() == 1){
                             new Thread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    handler.sendEmptyMessageDelayed(0,200);
+                                    Log.d("ChatActivity","尝试启动更新线程");
+                                    handler.sendEmptyMessageDelayed(0, 200);
                                 }
                             }).start();
+                            break;
+                        }
+                        friendsChatUser.oldChat = respond.substring(1);
+                        if(friendsChatUser.isDrivingPassive.equals("0")) {
+                            String[] oldToChats = friendsChatUser.oldChat.split("<spa2>");
+                            String testAnswer = "";
+                            for(int i = 0;i < oldToChats.length;i++) {
+                                testAnswer = testAnswer + oldToChats[i] + " ";
+                            }
+                            Log.d("ChatActivity", testAnswer);
+                            for(int i = 0;i < oldToChats.length - 1;i++){
+                                String[] chats = oldToChats[i].split("<spa1>");
+                                for(int j = 0;j < chats.length - 1;j++){
+                                        View view = inflater.inflate(R.layout.chat_left_resource,null,false);
+                                        TextView userNameTextView = view.findViewById(R.id.chatUserNameTextView);
+                                        TextView contentTextView = view.findViewById(R.id.chatContentTextView);
+                                        // ImageView headPictureImageView = view.findViewById(R.id.chatHeadPictureImageView);
+                                        userNameTextView.setText(DataKeeper.username);
+                                        contentTextView.setText(chats[j]);
+                                        linearLayout.addView(view);
+                                }
+                                View view = inflater.inflate(R.layout.chat_left_resource,null,false);
+                                TextView userNameTextView = view.findViewById(R.id.chatUserNameTextView);
+                                TextView contentTextView = view.findViewById(R.id.chatContentTextView);
+                                // ImageView headPictureImageView = view.findViewById(R.id.chatHeadPictureImageView);
+                                userNameTextView.setText(friendsChatUser.username);
+                                contentTextView.setText(chats[chats.length - 1]);
+                                linearLayout.addView(view);
+                            }
+                            if(oldToChats[oldToChats.length - 1].length() > 5 && oldToChats[oldToChats.length - 1].endsWith("<spa1>")){
+                                String[] chats = oldToChats[oldToChats.length - 1].split("<spa1>");
+                                for(int j = 0;j < chats.length;j++){
+                                    View view = inflater.inflate(R.layout.chat_right_resource,null,false);
+                                    TextView userNameTextView = view.findViewById(R.id.chatUserNameTextView);
+                                    TextView contentTextView = view.findViewById(R.id.chatContentTextView);
+                                    // ImageView headPictureImageView = view.findViewById(R.id.chatHeadPictureImageView);
+                                    userNameTextView.setText(DataKeeper.username);
+                                    contentTextView.setText(chats[j]);
+                                    linearLayout.addView(view);
+                                }
+                            }
+                            else{
+                                String[] chats = oldToChats[oldToChats.length - 1].split("<spa1>");
+                                for(int j = 0;j < chats.length - 1;j++){
+                                    View view = inflater.inflate(R.layout.chat_right_resource,null,false);
+                                    TextView userNameTextView = view.findViewById(R.id.chatUserNameTextView);
+                                    TextView contentTextView = view.findViewById(R.id.chatContentTextView);
+                                    // ImageView headPictureImageView = view.findViewById(R.id.chatHeadPictureImageView);
+                                    userNameTextView.setText(DataKeeper.username);
+                                    contentTextView.setText(chats[j]);
+                                    linearLayout.addView(view);
+                                }
+                                View view = inflater.inflate(R.layout.chat_left_resource,null,false);
+                                TextView userNameTextView = view.findViewById(R.id.chatUserNameTextView);
+                                TextView contentTextView = view.findViewById(R.id.chatContentTextView);
+                                // ImageView headPictureImageView = view.findViewById(R.id.chatHeadPictureImageView);
+                                userNameTextView.setText(friendsChatUser.username);
+                                contentTextView.setText(chats[chats.length - 1]);
+                                linearLayout.addView(view);
+                            }
+                        }
+                        else{
+                            String[] oldToChats = friendsChatUser.oldChat.split("<spa1>");
+                            String testAnswer = "";
+                            for(int i = 0;i < oldToChats.length;i++) {
+                                testAnswer = testAnswer + oldToChats[i] + " ";
+                            }
+                            Log.d("ChatActivity", testAnswer);
+                            for(int i = 0;i < oldToChats.length - 1;i++){
+                                String[] chats = oldToChats[i].split("<spa2>");
+                                for(int j = 0;j < chats.length - 1;j++){
+                                    View view = inflater.inflate(R.layout.chat_right_resource,null,false);
+                                    TextView userNameTextView = view.findViewById(R.id.chatUserNameTextView);
+                                    TextView contentTextView = view.findViewById(R.id.chatContentTextView);
+                                    // ImageView headPictureImageView = view.findViewById(R.id.chatHeadPictureImageView);
+                                    userNameTextView.setText(DataKeeper.username);
+                                    contentTextView.setText(chats[j]);
+                                    linearLayout.addView(view);
+                                }
+                                View view = inflater.inflate(R.layout.chat_left_resource,null,false);
+                                TextView userNameTextView = view.findViewById(R.id.chatUserNameTextView);
+                                TextView contentTextView = view.findViewById(R.id.chatContentTextView);
+                                // ImageView headPictureImageView = view.findViewById(R.id.chatHeadPictureImageView);
+                                userNameTextView.setText(friendsChatUser.username);
+                                contentTextView.setText(chats[0]);
+                                linearLayout.addView(view);
+                            }
+                            if(oldToChats[oldToChats.length - 1].length() > 5 && oldToChats[oldToChats.length - 1].endsWith("<spa2>")){
+                                String[] chats = oldToChats[oldToChats.length - 1].split("<spa2>");
+                                for(int j = 0;j < chats.length - 1;j++){
+                                    View view = inflater.inflate(R.layout.chat_right_resource,null,false);
+                                    TextView userNameTextView = view.findViewById(R.id.chatUserNameTextView);
+                                    TextView contentTextView = view.findViewById(R.id.chatContentTextView);
+                                    // ImageView headPictureImageView = view.findViewById(R.id.chatHeadPictureImageView);
+                                    userNameTextView.setText(DataKeeper.username);
+                                    contentTextView.setText(chats[j]);
+                                    linearLayout.addView(view);
+                                }
+                                View view = inflater.inflate(R.layout.chat_right_resource,null,false);
+                                TextView userNameTextView = view.findViewById(R.id.chatUserNameTextView);
+                                TextView contentTextView = view.findViewById(R.id.chatContentTextView);
+                                // ImageView headPictureImageView = view.findViewById(R.id.chatHeadPictureImageView);
+                                userNameTextView.setText(DataKeeper.username);
+                                contentTextView.setText(chats[chats.length - 1]);
+                                linearLayout.addView(view);
+                            }
+                            else{
+                                String[] chats = oldToChats[oldToChats.length - 1].split("<spa2>");
+                                for(int j = 0;j < chats.length - 1;j++){
+                                    View view = inflater.inflate(R.layout.chat_left_resource,null,false);
+                                    TextView userNameTextView = view.findViewById(R.id.chatUserNameTextView);
+                                    TextView contentTextView = view.findViewById(R.id.chatContentTextView);
+                                    // ImageView headPictureImageView = view.findViewById(R.id.chatHeadPictureImageView);
+                                    userNameTextView.setText(DataKeeper.username);
+                                    contentTextView.setText(chats[j]);
+                                    linearLayout.addView(view);
+                                }
+                                View view = inflater.inflate(R.layout.chat_left_resource,null,false);
+                                TextView userNameTextView = view.findViewById(R.id.chatUserNameTextView);
+                                TextView contentTextView = view.findViewById(R.id.chatContentTextView);
+                                // ImageView headPictureImageView = view.findViewById(R.id.chatHeadPictureImageView);
+                                userNameTextView.setText(friendsChatUser.username);
+                                contentTextView.setText(chats[chats.length - 1]);
+                                linearLayout.addView(view);
+                            }
+
+                            handler.sendEmptyMessageDelayed(0,200);
                         }
                         break;
 
@@ -319,7 +441,6 @@ public class ChatActivity extends AppCompatActivity {
                 }
             }
         }
-
         scrollView.scrollTo(0,0);
     }
 
@@ -334,8 +455,8 @@ public class ChatActivity extends AppCompatActivity {
             Map<String,String> request = new HashMap<>();
             request.put("sActivityId", DataKeeper.activityId);
             request.put("sServeType","2");
-            request.put("sDrivingPassive",friendsUser.isDrivingPassive);
-            request.put("sStaticId",friendsUser.staticId);
+            request.put("sDrivingPassive", friendsChatUser.isDrivingPassive);
+            request.put("sStaticId", friendsChatUser.staticId);
             request.put("sSendChat",sendChat);
             connection.sendPOST(request);
             while (connection.getOnWork() != 2){
@@ -362,6 +483,12 @@ public class ChatActivity extends AppCompatActivity {
                         contentTextView.setText(sendChat);
                         linearLayout.addView(view);
                         editText.setText("");
+                        if(friendsChatUser.isDrivingPassive.equals("0")) {
+                            friendsChatUser.oldChat = friendsChatUser.oldChat + "<spa1>";
+                        }
+                        else{
+                            friendsChatUser.oldChat = friendsChatUser.oldChat + "<spa2>";
+                        }
                         break;
 
                     case '1':
