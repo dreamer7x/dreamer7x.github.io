@@ -957,12 +957,18 @@ def trends():
                 return '0' + sRespond
 
         if sServeType == '1': # 获取评论
+            print("获取评论")
             sTrendsId = request.form.get('sTrendsId')
             sStaticId = keeper.DataKeeper.mActivityIdStaticIdList[sActivityId]
             lTrend = mysql_tools.get_trends(sTrendsId)
-            mDiscuss = eval(lTrend[5])
+            mDiscuss = eval(lTrend[8])
+            sRespond = ""
             sRespond1 = ""
             sRespond2 = ""
+            # sRespond1 = staticId<spa1>discussString<spa1>praiseNumber<spa>discussNumber<spa>
+            # isPraise<spa>isDiscuss<spa>
+            # sRespond2 = staticId<spa>replyString<spa>isPraise<spa1>
+            # sRespond = sRespond1 + sRespond2
             for sStaticId1 in mDiscuss:
                 sRespond1 = sRespond1 + str(sStaticId1) + '<spa1>' \
                            + mDiscuss[sStaticId1][0] + '<spa1>'
@@ -994,16 +1000,16 @@ def trends():
                 else:
                     sRespond2 = 'null'
 
-                sRespond1 = sRespond1 + sRespond2 + '<spa1>'
+                sRespond = sRespond1 + sRespond2 + '<spa1>'
             if sRespond1 != "":
-                sRespond = sRespond1[0:-6]
+                sRespond = sRespond1[0:-5]
             print(sRespond)
             return '0' + sRespond
 
         if sServeType == '2': # 发送点赞信息
             sStaticId = keeper.DataKeeper.mActivityIdStaticIdList[sActivityId]
             sTrendsId = request.form.get('sTrendsId')
-            lIdentityTrend = mysql_tools.get_trends(sTrendsId)
+            lIdentityTrend = mysql_tools.get_trends(str(sTrendsId))
             if lIdentityTrend == None:
                 return '2' # 未找到相关动态 点赞失败
             lPraiseStaticId = eval(lIdentityTrend[7])
@@ -1043,7 +1049,7 @@ def trends():
         if sServeType == '4': # 发布评论
             sStaticId = keeper.DataKeeper.mActivityIdStaticIdList[sActivityId]
             sTrendsId = request.form.get("sTrendsId")
-            sIntroduce = request.form.get("sDiscuss")
+            sDiscuss = request.form.get("sDiscuss")
             lTrend = mysql_tools.get_trends(sTrendsId)
             if lTrend == None:
                 return '2' # 未找到相关动态
@@ -1051,13 +1057,13 @@ def trends():
             mIntroduce = eval(lTrend[8])
             if sStaticId in mIntroduce:
                 iIntroduceNumber = iIntroduceNumber - 1
-                mIntroduce[sStaticId] = [sIntroduce,0,0,'[]','{}']
+                mIntroduce[sStaticId] = [sDiscuss,0,0,'[]','{}']
                 mysql_tools.update_trends_discuss(sTrendsId,
                                                     str(iIntroduceNumber),
                                                     str(mIntroduce))
                 return '3' # 重复评论 已覆盖
             iIntroduceNumber = iIntroduceNumber + 1
-            mIntroduce[sStaticId] = [sIntroduce,0,0,'[]','{}']
+            mIntroduce[sStaticId] = [sDiscuss,0,0,'[]','{}']
             mysql_tools.update_trends_discuss(sTrendsId,
                                                 str(iIntroduceNumber),
                                                 str(mIntroduce))

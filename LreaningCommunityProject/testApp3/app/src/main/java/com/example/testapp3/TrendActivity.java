@@ -227,12 +227,69 @@ public class TrendActivity extends AppCompatActivity {
             }
         }
 
+        if(discussList.size() != 0){
+            String staticIds = "[";
+            for(int i = 0;i < discussList.size();i++){
+                staticIds = staticIds + discussList.get(i).staticId + ",";
+            }
+            staticIds = staticIds.substring(0,staticIds.length() - 1) + "]";
+            HttpConnection connection = new HttpConnection(ParameterKeeper.dataHttpUrl
+                    + "/identity_sign");
+            Map<String, String> request = new HashMap<>();
+            request.put("sActivityId",DataKeeper.activityId);
+            request.put("sStaticId",staticIds);
+            connection.sendPOST(request);
+            if(connection.getOnWork() != 2){
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            String respond = connection.getData();
+            if(respond == null){
+                Log.d("TrendActivity","错误: 评论身份获取为空");
+            }
+            else{
+                switch (respond.charAt(0)){
+                    case '0':
+                        String[] signStrings = respond.split(" ");
+                        if(signStrings.length % 4 != 0){
+                            Log.d("TrendActivity","错误: 评论身份获取不全");
+                            break;
+                        }
+                        for(int i = 0;i < signStrings.length / 4;i++){
+                            for(int j = 0;j < discussList.size();j++){
+                                if(signStrings[i * 4].equals(discussList.get(j).staticId)){
+                                    discussList.get(j).username = signStrings[4 * i + 1];
+                                    discussList.get(j).motto = signStrings[4 * j + 2];
+                                    discussList.get(j).headPicture = signStrings[4 * j + 3];
+                                }
+                            }
+                        }
+                        break;
+
+                    case '1':
+                        Log.d("MainActivity", "要求重新登录");
+                        setContentView(R.layout.answer);
+                        TextView textView = findViewById(R.id.answerTextView);
+                        textView.setText("要求重新登陆");
+                        return;
+                }
+            }
+        }
+
         TrendAdapter trendAdapter = new TrendAdapter(
                 this,R.layout.trend_listview_resource00,discussList,
                 trendsId,staticId,username, motto, headPicturePosition,
                 title, text, picturePosition,
                 isPraise,isDiscuss,praiseNumber, discussNumber);
         trendListView.setAdapter(trendAdapter);
+    }
+
+    // 事件监听器
+    public void onCLickSendTrendFinishButton(View view){
+        finish();
     }
 
     // 返回意图接收器

@@ -55,6 +55,7 @@
         android:layout_weight="0.23">
 
         <Button
+            android:onClick="onClickFindAccompanyButton"
             android:background="#ddd"
             android:text="找伙伴"
             android:textColor="@color/white"
@@ -98,7 +99,7 @@
             android:layout_marginRight="5dp"
             android:background="@drawable/round_style_grey"
             android:text="我的\n竞赛"
-            android:textSize="18dp"
+            android:textSize="16dp"
             android:textStyle="bold"
             android:textColor="@color/white"
             android:layout_width="75dp"
@@ -109,6 +110,7 @@
             android:layout_marginRight="5dp"
             android:background="@drawable/round_style_grey"
             android:text="我的\n备忘"
+            android:textSize="16dp"
             android:textStyle="bold"
             android:textColor="@color/white"
             android:layout_width="75dp"
@@ -119,6 +121,7 @@
             android:layout_marginRight="5dp"
             android:background="@drawable/round_style_grey"
             android:text="情绪\n发泄"
+            android:textSize="16dp"
             android:textStyle="bold"
             android:textColor="@color/white"
             android:layout_width="75dp"
@@ -129,6 +132,7 @@
             android:layout_marginRight="5dp"
             android:background="@drawable/round_style_grey"
             android:text="时间\n管理"
+            android:textSize="16dp"
             android:textStyle="bold"
             android:textColor="@color/white"
             android:layout_width="75dp"

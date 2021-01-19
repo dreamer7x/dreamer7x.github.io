@@ -71,7 +71,8 @@
                 android:layout_height="match_parent"/>
         </com.example.testapp3.resources.TrendsLinearLayout>
 
-        <LinearLayout
+        <com.example.testapp3.resources.TrendsLinearLayout
+            android:id="@+id/oldTrendsTrendsSpace"
             android:padding="5dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
@@ -104,7 +105,7 @@
 
 
             </LinearLayout>
-        </LinearLayout>
+        </com.example.testapp3.resources.TrendsLinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -141,5 +142,5 @@
                 android:layout_weight="0.33"/>
 
         </LinearLayout>
-    </>
+    </LinearLayout>
 </LinearLayout>

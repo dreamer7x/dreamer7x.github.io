@@ -15,11 +15,38 @@ import java.util.Map;
 /**
  * HttpConnectionDemo
  *
- * 权限要求：
+ * 权限要求:
  * <uses-permission android:name="android.permission.INTERNET"/>
  * android:usesCleartextTraffic="true"
+ * 否则将报错
  *
- * 采用线程创建连接，当工作状态为2时即为工作执行已产生结果数据，可以调用getData获取相关数据
+ * 使用说明:
+ * 遵循特定形式:
+ * HttpConnection connection = new HttpConnection(<服务器网址> + <端口>/<服务器URL> + <端口名>);
+ * Map<String,String> request = new HashMap<>();
+ * ……(使用put方法将数据打包程字典格式)
+ * connection.sendPOST(request);
+ * while(connection.getOnWork() != 2){
+ *     try{
+ *          Thread.sleep(200);
+ *     }
+ *     catch (InterruptedException e) {
+ *          e.printStackTrace();
+ *     }
+ * }
+ * String respond = connection.getData();
+ * if(respond == null){
+ *     ……(网络未连接从而没有收到数据包,可以进行相关的处理)
+ * }
+ * else{
+ *     switch(respond.charAt(0)){
+ *         case '0':
+ *              ……(数据包发送成功,可以进行一般操作);
+ *
+ *         ……(使用 case 来处理多种情况)
+ *     }
+ * }
+ * 采用线程创建连接,当工作状态为2时,即为工作执行已产生结果数据,可以调用getData获取相关数据
  */
 
 public class HttpConnection {

@@ -59,6 +59,9 @@ public class ChatActivity extends AppCompatActivity {
                     else{
                         switch (respond.charAt(0)){
                             case '0':
+                                if(respond.length() == 1){
+                                    break;
+                                }
                                 if(friendsChatUser.isDrivingPassive.equals("0")) {
                                     String[] chatStrings = respond.substring(1).split("<spa2>");
                                     for(int i = 0;i < chatStrings.length;i++){
@@ -94,7 +97,7 @@ public class ChatActivity extends AppCompatActivity {
                                 return;
                         }
                     }
-                    handler.sendEmptyMessageDelayed(0,200);
+                    handler.sendEmptyMessageDelayed(0, 500);
                     break;
             }
         }
@@ -270,6 +273,7 @@ public class ChatActivity extends AppCompatActivity {
                     linearLayout.addView(view);
                 }
             }
+            handler.sendEmptyMessageDelayed(0,500);
         }
         else{
             HttpConnection connection = new HttpConnection(ParameterKeeper.dataHttpUrl + "/chat");
@@ -427,8 +431,6 @@ public class ChatActivity extends AppCompatActivity {
                                 contentTextView.setText(chats[chats.length - 1]);
                                 linearLayout.addView(view);
                             }
-
-                            handler.sendEmptyMessageDelayed(0,200);
                         }
                         break;
 
@@ -441,6 +443,7 @@ public class ChatActivity extends AppCompatActivity {
                 }
             }
         }
+        handler.sendEmptyMessageDelayed(0,500);
         scrollView.scrollTo(0,0);
     }
 
@@ -504,5 +507,11 @@ public class ChatActivity extends AppCompatActivity {
 
     public void onClickChatFinishButton(View view){
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        handler.removeCallbacksAndMessages(null);
+        super.onDestroy();
     }
 }

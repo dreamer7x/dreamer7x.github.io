@@ -1,5 +1,7 @@
 package com.example.testapp3.tools;
 
+import android.util.Log;
+
 import java.util.GregorianCalendar;
 
 public class DateTools {
@@ -26,20 +28,17 @@ public class DateTools {
         else{
             month = Integer.valueOf(monthString);
         }
+        Log.d("DateTools","月份: " + month);
 
         if(dayString.charAt(0) == '0') {
             day = Integer.valueOf(dayString.substring(1));
         }
         else{
-            day = Integer.valueOf(dateString);
+            day = Integer.valueOf(dayString);
         }
+        Log.d("DateTools","日期: " + day);
 
-        if(weekString.charAt(0) == '0') {
-            week = Integer.valueOf(weekString.substring(1));
-        }
-        else{
-            week = Integer.valueOf(weekString);
-        }
+        week = Integer.valueOf(weekString);
 
         GregorianCalendar gregorianCalendar = (GregorianCalendar) GregorianCalendar.getInstance();
         boolean isLeapYear = gregorianCalendar.isLeapYear(year);

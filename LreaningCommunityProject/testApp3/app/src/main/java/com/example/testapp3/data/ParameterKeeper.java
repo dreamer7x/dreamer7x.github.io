@@ -11,7 +11,8 @@ public class ParameterKeeper {
     public static String emailRegularExpression = "^\\d{6,10}@qq.com\\s*$";
 
     // 后端服务器网址
-    public static final String dataHttpUrl = "http://10.131.234.226:5000";
+    public static final String dataHttpUrl = "http://192.168.0.104:5000";
+
     // 前端服务器网址
     public static final String viewHttpUrl = null;
 

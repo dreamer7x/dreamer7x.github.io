@@ -8,8 +8,8 @@ import com.example.testapp3.resources.Trends;
 import java.util.List;
 
 public class DataKeeper {
-    // 动态Id
-    public static String activityId = "0";
+    // 动态Id 这里就是要修改的位置
+    public static String activityId = "000001";
 
     // 用户 基础社交身份信息
     public static String username;

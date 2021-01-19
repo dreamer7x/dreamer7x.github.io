@@ -16,6 +16,7 @@
         android:orientation="horizontal">
 
         <Button
+            android:onClick="onClickDiscussFinishButton"
             android:background="#ddd"
             android:textSize="18dp"
             android:text="返回"

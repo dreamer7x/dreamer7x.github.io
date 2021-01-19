@@ -77,6 +77,7 @@ public class TrendAdapter extends ArrayAdapter<Discuss> {
         this.praiseNumber = praiseNumber;
         this.discussNumber = discussNumber;
         this.trendsId = trendsId;
+        Log.d("TrendAdapter","动态静态码: " + trendsId + " 身份静态码: " + staticId);
     }
 
     class ViewHolder{
@@ -99,7 +100,7 @@ public class TrendAdapter extends ArrayAdapter<Discuss> {
             TextView mottoTextView = view.findViewById(R.id.trendMottoTextView);
             TextView titleTextView = view.findViewById(R.id.trendTitleTextView);
             TextView textTextView = view.findViewById(R.id.trendTextTextView);
-            LinearLayout pictureLinearLayout = view.findViewById(R.id.trendPicturePosition);
+            // LinearLayout pictureLinearLayout = view.findViewById(R.id.trendPicturePosition);
             Button praiseNumberButton = view.findViewById(R.id.trendPraiseButton);
             Button discussNumberButton = view.findViewById(R.id.trendDiscussButton);
             LinearLayout headLinearLayout = view.findViewById(R.id.trendsLinearLayout);
@@ -121,7 +122,6 @@ public class TrendAdapter extends ArrayAdapter<Discuss> {
             else {
                 discussNumberButton.setText("评论 " + discussNumber);
             }
-
             // 绑定监听
             // 发布点赞
             praiseNumberButton.setOnClickListener(new View.OnClickListener() {
@@ -230,7 +230,6 @@ public class TrendAdapter extends ArrayAdapter<Discuss> {
                     getContext().startActivity(intent);
                 }
             });
-
             return view;
         }
         else{
@@ -268,6 +267,7 @@ public class TrendAdapter extends ArrayAdapter<Discuss> {
                     TrendsLinearLayout trendsLinearLayout = (TrendsLinearLayout)view;
                     Discuss discuss = getItem(trendsLinearLayout.position);
                     String discussString = "";
+                    discussString = discussString + discuss.staticId + "<spa>";
                     discussString = discussString + discuss.username + "<spa>";
                     discussString = discussString + discuss.motto + "<spa>";
                     discussString = discussString + discuss.headPicture + "<spa>";

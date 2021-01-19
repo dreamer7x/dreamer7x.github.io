@@ -1,10 +1,12 @@
 package com.example.testapp3;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -20,6 +22,7 @@ import android.widget.TextView;
 import com.example.testapp3.data.DataKeeper;
 import com.example.testapp3.data.ParameterKeeper;
 import com.example.testapp3.resources.AttentionsFansUser;
+import com.example.testapp3.resources.Discuss;
 import com.example.testapp3.resources.FriendsChatUser;
 import com.example.testapp3.resources.FriendsFriendsUser;
 import com.example.testapp3.resources.Trends;
@@ -36,6 +39,7 @@ import java.util.Map;
 
 import static android.graphics.Color.WHITE;
 
+// 主页
 public class MainWindowsActivity extends AppCompatActivity {
 
     // 元素资源
@@ -59,9 +63,9 @@ public class MainWindowsActivity extends AppCompatActivity {
         initAttentionsFans();
     }
 
+    // 创建滑动界面
     public void initView(){
         // 这里模拟用户已经成功登录并获得动态Id
-        DataKeeper.activityId = "000001";
         isGetAttentionsFans = false;
 
         // 获取用户个人的基础数据
@@ -745,7 +749,6 @@ public class MainWindowsActivity extends AppCompatActivity {
                                         DataKeeper.oldTrendsList.get(j).username = identitySigns[4 * i + 1];
                                         DataKeeper.oldTrendsList.get(j).motto = identitySigns[4 * i + 2];
                                         DataKeeper.oldTrendsList.get(j).headPicturePosition = identitySigns[4 * i + 3];
-                                        break;
                                     }
                                 }
                             }
@@ -1074,9 +1077,9 @@ public class MainWindowsActivity extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     String staticId = DataKeeper.friendsFriendsUserList.get(position).staticId;
-
                     Intent intent = new Intent(MainWindowsActivity.this,OtherTrendsActivity.class);
                     intent.putExtra("staticId",staticId);
+                    intent.putExtra("from",6);
                     startActivity(intent);
                 }
             });
@@ -1104,9 +1107,39 @@ public class MainWindowsActivity extends AppCompatActivity {
         intent.putExtra("from",0);
         startActivity(intent);
     }
+
     public void onClickToFansLinearLayout(View view){
         Intent intent = new Intent(MainWindowsActivity.this,AttentionsFansActivity.class);
         intent.putExtra("from",1);
         startActivity(intent);
+    }
+
+    public void onClickFindAccompanyButton(View view){
+
+    }
+
+    // 返回意图接收器
+    @Override
+    @SuppressLint("MissingSuperCall")
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if(data == null){
+            return;
+        }
+        switch (requestCode){
+            case 1:
+                if(resultCode == RESULT_OK){
+                    boolean respond = data.getBooleanExtra("isSendDiscuss",false);
+                    int position = data.getIntExtra("position",-1);
+                    String discussString = data.getStringExtra("discussString");
+                    if(respond && position != -1) {
+                        DataKeeper.oldTrendsList.get(position).isDiscuss = true;
+                        View view = viewList.get(2);
+                        ListView listView = view.findViewById(R.id.oldTrendsListView);
+                        OldTrendsAdapter oldTrendsAdapter =  (OldTrendsAdapter) listView.getAdapter();
+                        oldTrendsAdapter.notifyDataSetChanged();
+                    }
+                }
+                break;
+        }
     }
 }

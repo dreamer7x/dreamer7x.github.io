@@ -8,6 +8,7 @@ public class TrendsLinearLayout extends LinearLayout {
 
     public int position;
     public String staticId;
+    public String trendsId;
 
     public TrendsLinearLayout(Context context) {
         super(context);

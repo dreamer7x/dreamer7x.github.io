@@ -397,9 +397,9 @@ def update_trends_discuss(sTrendsId,sDiscussNumber,sDiscuss):
                                          database='test',
                                          charset='utf8')
     cCursor = conMysqlConnection.cursor()
-    sSql = 'update trends set iDiscussNumber = ' + sDiscussNumber \
-           + ',sDiscuss = \'' + sDiscuss \
-           + '\' where sTrendsId = ' + sTrendsId
+    sSql = "update trends set iDiscussNumber = " + sDiscussNumber \
+           + ",sDiscuss = \"" + sDiscuss \
+           + "\" where sTrendsId = " + sTrendsId
     cCursor.execute(sSql)
     conMysqlConnection.commit()
 

@@ -22,6 +22,7 @@ public class DiscussActivity extends AppCompatActivity {
 
     // 参数
     private String trendsId;
+    private int position = -1;
 
     // 组件
     private EditText discussEditText;
@@ -41,6 +42,7 @@ public class DiscussActivity extends AppCompatActivity {
             Log.d("DiscussActivity","错误: 动态参数未提供");
             finish();
         }
+        position = intent.getIntExtra("position",-1);
     }
 
     // 监听器
@@ -55,7 +57,7 @@ public class DiscussActivity extends AppCompatActivity {
         request.put("sActivityId", DataKeeper.activityId);
         request.put("sServeType","4");
         request.put("sDiscuss",content);
-        request.put("sTrendId",trendsId);
+        request.put("sTrendsId",trendsId);
         connection.sendPOST(request);
         while(connection.getOnWork() != 2){
             try {
@@ -78,6 +80,9 @@ public class DiscussActivity extends AppCompatActivity {
                     Intent intent = new Intent();
                     intent.putExtra("isSendDiscuss",true);
                     setResult(RESULT_OK,intent);
+                    if(position != -1){
+                        intent.putExtra("position",position);
+                    }
                     finish();
                     break;
 
@@ -89,5 +94,9 @@ public class DiscussActivity extends AppCompatActivity {
                     return;
             }
         }
+    }
+
+    public void onClickDiscussFinishButton(View view){
+        finish();
     }
 }
