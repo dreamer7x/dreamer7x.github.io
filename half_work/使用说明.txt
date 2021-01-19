@@ -1,0 +1,3 @@
+test_server 	为服务器用python flask编写,建议使用Pycharm进行打开,只需要点击Pycharm左上角打开该文件夹即可
+testApp 		为登录注册程序,现在还没有和testApp3也就是进去后的服务部分连接上,目的是为了方便调试
+testApp3		为提供服务的代码,聊天功能已经基本完善,但是在动态方面还存在一定问题

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:background="#ddd"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:onClick="onClickChatFinishButton"
+            android:text="返回"
+            android:textStyle="bold"
+            android:textSize="18dp"
+            android:textColor="@color/white"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"/>
+
+        <TextView
+            android:layout_marginLeft="5dp"
+            android:text="学习者"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:gravity="center_vertical"
+            android:id="@+id/chatUserNameTextView"
+            android:layout_width="0dp"
+            android:layout_weight="0.8"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/chatScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:id="@+id/chatLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!--
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp">
+
+                <ImageView
+                    android:layout_margin="5dp"
+                    android:background="@drawable/round_style_grey"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"/>
+                <LinearLayout
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:gravity="center_vertical"
+                        android:textSize="20dp"
+                        android:text="学习者"
+                        android:textStyle="bold"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"/>
+
+                    <TextView
+                        android:paddingLeft="10dp"
+                        android:layout_marginTop="5dp"
+                        android:paddingRight="10dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:background="@drawable/corner_style_grey02"
+                        android:textColor="@color/white"
+                        android:gravity="center_vertical"
+                        android:textSize="21dp"
+                        android:textStyle="bold"
+                        android:text="好好学习天天向上"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+            </LinearLayout>
+            -->
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:windowSoftInputMode="stateUnspecified|adjustPan"
+        android:background="#ddd"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.15"/>
+
+        <EditText
+            android:padding="10dp"
+            android:id="@+id/chatSendChatEditText"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/round_style_white"
+            android:layout_width="0dp"
+            android:layout_weight="0.7"
+            android:layout_height="match_parent"/>
+
+        <Button
+            android:onClick="onClickChatSendChatEditText"
+            android:text="发送"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.15"/>
+
+    </LinearLayout>
+</LinearLayout>

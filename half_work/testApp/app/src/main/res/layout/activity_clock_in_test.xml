@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ClockInTestActivity"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.11"
+        android:orientation="horizontal">
+
+        <Button
+            android:background="@drawable/buttonstyle01"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="18dp"
+            android:text="返回"
+            android:layout_marginBottom="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="18dp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.27"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.73"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.59">
+
+        <TableLayout
+            android:background="@drawable/buttonstyle02"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginLeft="15dp"
+            android:stretchColumns="2">
+
+            <TextView
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:text="打卡日程表"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.15"/>
+
+            <TableLayout
+                android:stretchColumns="0,1,2,3,4,5,6,7"
+                android:layout_margin="10dp"
+                android:background="@drawable/tablestyle01"
+                android:layout_height="0dp"
+                android:layout_weight="0.85">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:gravity="center_vertical"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.16">
+
+                    <LinearLayout
+                        android:gravity="center">
+                        <TextView
+                            android:gravity="center_horizontal"
+                            android:textSize="19dp"
+                            android:textStyle="bold"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.14"
+                            android:text="一" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:gravity="center">
+                        <TextView
+                            android:gravity="center_horizontal"
+                            android:textSize="19dp"
+                            android:textStyle="bold"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.14"
+                            android:text="二" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:gravity="center">
+                        <TextView
+                            android:gravity="center_horizontal"
+                            android:textSize="19dp"
+                            android:textStyle="bold"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.14"
+                            android:text="三" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:gravity="center">
+                        <TextView
+                            android:gravity="center_horizontal"
+                            android:textSize="19dp"
+                            android:textStyle="bold"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.14"
+                            android:text="四" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:gravity="center">
+                        <TextView
+                            android:gravity="center_horizontal"
+                            android:textSize="19dp"
+                            android:textStyle="bold"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.14"
+                            android:text="五" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:gravity="center">
+                        <TextView
+                            android:gravity="center_horizontal"
+                            android:textSize="19dp"
+                            android:textStyle="bold"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.14"
+                            android:text="六" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:gravity="center">
+                        <TextView
+                            android:gravity="center_horizontal"
+                            android:textSize="19dp"
+                            android:textStyle="bold"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.14"
+                            android:text="日" />
+                    </LinearLayout>
+
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableRow01"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.16">
+
+
+                    <LinearLayout
+                        android:gravity="center">
+                        <TextView
+                            android:textColor="@color/white"
+                            android:textStyle="bold"
+                            android:textSize="19dp"
+                            android:gravity="center"
+                            android:text="1"
+                            android:background="@drawable/textview01"
+                            android:layout_height="30dp"
+                            android:layout_width="30dp"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:gravity="center">
+                        <TextView
+                            android:textColor="@color/white"
+                            android:textStyle="bold"
+                            android:textSize="19dp"
+                            android:gravity="center"
+                            android:text="1"
+                            android:background="@drawable/textview01"
+                            android:layout_height="30dp"
+                            android:layout_width="30dp"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:gravity="center">
+                        <TextView
+                            android:textColor="@color/white"
+                            android:textStyle="bold"
+                            android:textSize="19dp"
+                            android:gravity="center"
+                            android:text="1"
+                            android:background="@drawable/textview01"
+                            android:layout_height="30dp"
+                            android:layout_width="30dp"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:gravity="center">
+                        <TextView
+                            android:textColor="@color/white"
+                            android:textStyle="bold"
+                            android:textSize="19dp"
+                            android:gravity="center"
+                            android:text="1"
+                            android:background="@drawable/textview01"
+                            android:layout_height="30dp"
+                            android:layout_width="30dp"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:gravity="center">
+                        <TextView
+                            android:textColor="@color/white"
+                            android:textStyle="bold"
+                            android:textSize="19dp"
+                            android:gravity="center"
+                            android:text="1"
+                            android:background="@drawable/textview01"
+                            android:layout_height="30dp"
+                            android:layout_width="30dp"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:gravity="center">
+                        <TextView
+                            android:textColor="@color/white"
+                            android:textStyle="bold"
+                            android:textSize="19dp"
+                            android:gravity="center"
+                            android:text="1"
+                            android:background="@drawable/textview01"
+                            android:layout_height="30dp"
+                            android:layout_width="30dp"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:gravity="center">
+                        <TextView
+                            android:textColor="@color/white"
+                            android:textStyle="bold"
+                            android:textSize="19dp"
+                            android:gravity="center"
+                            android:text="1"
+                            android:background="@drawable/textview01"
+                            android:layout_height="30dp"
+                            android:layout_width="30dp"/>
+                    </LinearLayout>
+
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableRow02"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.16">
+
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableRow03"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.16">
+
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableRow04"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.16">
+
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableRow05"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.16">
+
+                </TableRow>
+
+
+            </TableLayout>
+        </TableLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="0dp"
+        android:layout_weight="0.3">
+
+        <Button
+            android:onClick="setClockInButton"
+            android:text="打卡"
+            android:textStyle="bold"
+            android:textSize="23dp"
+            android:textColor="@color/white"
+            android:background="@drawable/buttonstyle03"
+            android:layout_width="150dp"
+            android:layout_height="150dp" />
+
+
+    </LinearLayout>
+
+</LinearLayout>

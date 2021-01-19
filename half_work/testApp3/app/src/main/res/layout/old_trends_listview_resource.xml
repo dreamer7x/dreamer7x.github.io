@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_vertical">
+
+    <View
+        android:background="#eee"
+        android:layout_width="match_parent"
+        android:layout_height="8dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.example.testapp3.resources.TrendsLinearLayout
+            android:id="@+id/trendsLinearLayout"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_margin="5dp"
+                android:layout_width="65dp"
+                android:layout_height="match_parent"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/trendHeadPictureImageView"
+                    android:background="@drawable/round_style_grey"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/trendUsernameTextView"
+                    android:gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:textSize="18dp"
+                    android:textStyle="bold"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.5"/>
+
+                <TextView
+                    android:id="@+id/trendMottoTextView"
+                    android:textColor="#999"
+                    android:textSize="16dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.5"/>
+            </LinearLayout>
+
+            <com.example.testapp3.resources.TrendsButton
+                android:id="@+id/trendSetButton"
+                android:text="设\n置"
+                android:textSize="15dp"
+                android:textColor="#999"
+                android:background="@color/white"
+                android:layout_width= "35dp"
+                android:layout_height="match_parent"/>
+        </com.example.testapp3.resources.TrendsLinearLayout>
+
+        <com.example.testapp3.resources.TrendsLinearLayout
+            android:id="@+id/oldTrendsTrendsSpace"
+            android:padding="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/trendTitleTextView"
+                android:textSize="18dp"
+                android:textColor="#666"
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/trendTextTextView"
+                android:textSize="16dp"
+                android:textColor="#999"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:id="@+id/trendImageSpaceLinearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+            </LinearLayout>
+        </com.example.testapp3.resources.TrendsLinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp">
+
+            <com.example.testapp3.resources.TrendsButton
+                android:id="@+id/trendResendButton"
+                android:text="转发"
+                android:textColor="#999"
+                android:textSize="16dp"
+                android:background="@color/white"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.33"/>
+
+            <com.example.testapp3.resources.TrendsButton
+                android:id="@+id/trendDiscussButton"
+                android:text="评论"
+                android:textColor="#999"
+                android:textSize="16dp"
+                android:background="@color/white"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.33"/>
+
+            <com.example.testapp3.resources.TrendsButton
+                android:id="@+id/trendPraiseButton"
+                android:text="点赞"
+                android:textColor="#999"
+                android:textSize="16dp"
+                android:background="@color/white"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.33"/>
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

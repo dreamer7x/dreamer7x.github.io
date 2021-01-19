@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:background="#ddd"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        android:orientation="horizontal">
+
+        <Button
+            android:onClick="onClickAttentionsFansFinishButton"
+            android:layout_gravity="center_vertical"
+            android:background="#ddd"
+            android:text="返 回"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:layout_width="0dp"
+            android:layout_weight="0.17"
+            android:layout_height="match_parent"/>
+
+        <View
+            android:layout_marginLeft="20dp"
+            android:layout_width="0dp"
+            android:layout_weight="0.78"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.08">
+
+        <Button
+            android:onClick="onClickToAttentionsButton"
+            android:background="@color/white"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:textColor="#999"
+            android:text="我的关注"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="match_parent"/>
+
+        <View
+            android:background="#ddd"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"/>
+
+        <Button
+            android:onClick="onClickToFansButton"
+            android:background="@color/white"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:textColor="#999"
+            android:text="我的粉丝"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.82">
+
+        <ListView
+            android:id="@+id/attentionsFansListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+</LinearLayout>

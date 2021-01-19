@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:background="#ddd"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.10"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.15"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_margin="10dp"
+                android:id="@+id/titleHeadImageView"
+                android:background="@drawable/round_style_white"
+                android:onClick="onClickToMineButton"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:gravity="center" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/round_style_white"
+            android:layout_width="0dp"
+            android:layout_weight="0.6"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_marginLeft="10dp"
+                android:text="搜索"
+                android:gravity="center_vertical"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.15"/>
+
+            <View
+                android:background="#ddd"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"/>
+
+            <EditText
+                android:background="@drawable/round_style_white"
+                android:layout_width="0dp"
+                android:layout_weight="0.85"
+                android:layout_height="match_parent"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.15"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.05"
+        android:orientation="horizontal">
+
+        <Button
+            android:onClick="onClickToFriendsChatButton"
+            android:id="@+id/toFriendsChatButton"
+            android:text="聊天"
+            android:textColor="#999"
+            android:background="@color/white"
+            android:textStyle="bold"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="match_parent"/>
+
+        <Button
+            android:onClick="onClickToFriendsFriendsButton"
+            android:id="@+id/toFriendsFriendsButton"
+            android:text="好友"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:background="#ddd"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.85"
+        android:orientation="vertical">
+
+        <ListView
+            android:id="@+id/friendsListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </ListView>
+
+    </LinearLayout>
+
+
+</LinearLayout>

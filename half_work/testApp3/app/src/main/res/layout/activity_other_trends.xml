@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/otherTrendsBackgroundLinearLayout"
+        android:background="#ddd"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.2"
+        android:orientation="horizontal">
+
+        <Button
+            android:onClick="onClickOtherTrendsFinishButton"
+            android:background="#ddd"
+            android:text="返回"
+            android:textStyle="bold"
+            android:textSize="18dp"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.22">
+
+        <LinearLayout
+            android:layout_margin="10dp"
+            android:layout_width="120dp"
+            android:layout_height="120dp">
+
+            <ImageView
+                android:id="@+id/otherTrendsHeadPictureImageView"
+                android:background="@drawable/round_style_grey"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.5"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/otherTrendsFansNumberTextView"
+                        android:textSize="18dp"
+                        android:textColor="@color/black"
+                        android:gravity="center_horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="0.5"/>
+
+                    <TextView
+                        android:text="粉丝"
+                        android:gravity="center_horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="0.5"/>
+
+                </LinearLayout>
+
+                <View
+                    android:background="#ddd"
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/otherTrendsAttentionsNumberTextView"
+                        android:textSize="18dp"
+                        android:textColor="@color/black"
+                        android:gravity="center_horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="0.5"/>
+
+                    <TextView
+                        android:text="关注"
+                        android:gravity="center_horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="0.5"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.6"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/otherTrendsAttentionButton"
+                    android:layout_margin="5dp"
+                    android:textSize="18dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:text="+ 关注"
+                    android:background="#ddd"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.5"/>
+
+                <Button
+                    android:id="@+id/otherTrendsFriendButton"
+                    android:layout_margin="5dp"
+                    android:textSize="18dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:text="+ 好友"
+                    android:background="#ddd"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.5"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.2"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/otherTrendsUsernameTextView"
+            android:layout_marginBottom="8dp"
+            android:textSize="23dp"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="0.33"/>
+
+        <TextView
+            android:id="@+id/otherTrendsMottoTextView"
+            android:layout_marginBottom="5dp"
+            android:textColor="#888"
+            android:textSize="18dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.33"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.33"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/otherTrendsTrendsButton"
+                android:onClick="onClickToTrendsButton"
+                android:background="@color/white"
+                android:text="动态"
+                android:textSize="18dp"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="0.5"
+                android:layout_height="match_parent"/>
+
+            <View
+                android:background="#ddd"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"/>
+
+            <Button
+                android:id="@+id/otherTrendsCollectButton"
+                android:onClick="onClickToCollectTrendsButton"
+                android:background="@color/white"
+                android:text="收藏"
+                android:textSize="18dp"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="0.5"
+                android:layout_height="match_parent"/>
+
+            <View
+                android:background="#ddd"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"/>
+
+            <Button
+                android:id="@+id/otherTrendsTeamButton"
+                android:onClick="onClickToTeamButton"
+                android:background="@color/white"
+                android:text="组队"
+                android:textSize="18dp"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="0.5"
+                android:layout_height="match_parent"/>
+
+        </LinearLayout>
+
+        <View
+            android:background="#ddd"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/otherTrendsListView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.48">
+
+    </ListView>
+
+</LinearLayout>

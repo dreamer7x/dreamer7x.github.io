@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainWindowsActivity"
+    android:orientation="vertical">
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/main_windows"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.92"
+        android:orientation="vertical"/>
+
+    <LinearLayout
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.08"
+        android:orientation="horizontal">
+
+        <Button
+            android:onClick="onClickToTitleButton"
+            android:id="@+id/main_windows_button01"
+            android:text="首页"
+            android:background="@color/white"
+            android:textColor="#ddd"
+            android:textStyle="bold"
+            android:textSize="22dp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.25"/>
+
+        <Button
+            android:onClick="onClickToFriendsButton"
+            android:id="@+id/main_windows_button02"
+            android:text="好友"
+            android:background="#ddd"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="22dp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.25"/>
+
+        <Button
+            android:onClick="onClickToTrendsButton"
+            android:id="@+id/main_windows_button03"
+            android:text="社区"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="22dp"
+            android:layout_width="0dp"
+            android:layout_weight="0.25"
+            android:background="#ddd"
+            android:layout_height="match_parent"/>
+
+        <Button
+            android:onClick="onClickToMineButton"
+            android:id="@+id/main_windows_button04"
+            android:text="我"
+            android:background="#ddd"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="22dp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.25"/>
+
+    </LinearLayout>
+
+</LinearLayout>
